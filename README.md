@@ -50,14 +50,26 @@ npm run dev
 ------------------------------
 ## 📂 項目目錄
 ```text
-├── src/
-│   ├── components/       # OS 組件 (Taskbar, Desktop, Window)
-│   ├── apps/             # 內建應用 (Editor, Terminal, File Explorer)
-│   ├── lib/              # 工具函數與 AI 核心邏輯
-│   ├── routes/           # SolidStart 路由與 API Endpoints
-│   └── stores/           # 全局狀態 (User Session, System Config)
-├── public/               # 靜態資源與圖標
-└── package.json
+.
+├── nebula-os-monorepo/
+│   ├── apps/                   # 系統內建應用 (如 Settings, App Store)
+│   ├── nebula-kernel/          # [Fiber (Go) 內核]
+│   │   ├── api/                # RESTful 接口
+│   │   ├── cmd/                # 入口文件
+│   │   ├── internal/
+│   │   │   ├── appmanager/     # 管理員安裝、二進位/JS 模組加載邏輯
+│   │   │   ├── desktop/        # 用戶桌面與 App 實例管理
+│   │   │   └── auth/           # 權限校驗 (Admin vs User)
+│   │   └── storage/            # App 資源與用戶數據存儲
+│   ├── nebula-ui/              # [SolidStart 前端]
+│   │   ├── src/
+│   │   │   ├── core/           # OS 核心組件 (WindowManager, Taskbar)
+│   │   │   ├── sdk/            # 給第三方 App 調用的 SDK (@nebula/sdk)
+│   │   │   ├── shell/          # 桌面渲染與 App 加載器
+│   │   │   └── routes/         # SSR 路由與 BFF
+│   ├── packages/               # 共享 SDK 或 類型定義
+│   │   └── sdk/                # App Framework 核心
+│   └── installed_apps/         # [動態目錄] 存放管理員安裝的 App 編譯檔 (.js / .wasm)
 ```
 
 ------------------------------
