@@ -37,11 +37,14 @@ export default function AppDock(props: AppDockProps) {
 								: "rgba(255,255,255,0.14)",
 							color: item.isMinimized ? "rgba(229,230,255,0.45)" : "#e5e6ff",
 							"border-radius": "10px",
-							width: "34px",
-							height: "30px",
+							width: "44px",
+							height: "44px",
 							cursor: "pointer",
-							"font-size": "1rem",
+							"font-size": "1.2rem",
 							transition: "background 0.15s, border 0.15s, color 0.15s",
+							display: "flex",
+							"align-items": "center",
+							"justify-content": "center",
 						}}
 						title={item.isMinimized ? `Restore ${item.title}` : `Minimize ${item.title}`}
 						aria-label={item.isMinimized ? `Restore ${item.title}` : `Minimize ${item.title}`}
