@@ -41,16 +41,24 @@ export default function ImageViewer(props: ImageViewerProps) {
 	const [index, setIndex] = createSignal(0);
 	const [fitContain, setFitContain] = createSignal(true);
 	const [zoom, setZoom] = createSignal(1);
+	const [offsetX, setOffsetX] = createSignal(0);
+	const [offsetY, setOffsetY] = createSignal(0);
+	const [isDragging, setIsDragging] = createSignal(false);
+	const [dragStart, setDragStart] = createSignal({ x: 0, y: 0 });
 
 	const current = () => GALLERY[index()];
 
 	const previous = () => {
 		setZoom(1);
+		setOffsetX(0);
+		setOffsetY(0);
 		setIndex((i) => (i - 1 + GALLERY.length) % GALLERY.length);
 	};
 
 	const next = () => {
 		setZoom(1);
+		setOffsetX(0);
+		setOffsetY(0);
 		setIndex((i) => (i + 1) % GALLERY.length);
 	};
 
@@ -58,6 +66,24 @@ export default function ImageViewer(props: ImageViewerProps) {
 		e.preventDefault();
 		const delta = e.deltaY < 0 ? 0.1 : -0.1;
 		setZoom((z) => Math.min(5, Math.max(0.2, +(z + delta).toFixed(2))));
+	};
+
+	const handleMouseDown = (e: MouseEvent) => {
+		if (zoom() === 1) return;
+		setIsDragging(true);
+		setDragStart({ x: e.clientX - offsetX(), y: e.clientY - offsetY() });
+	};
+
+	const handleMouseMove = (e: MouseEvent) => {
+		if (!isDragging()) return;
+		const newOffsetX = e.clientX - dragStart().x;
+		const newOffsetY = e.clientY - dragStart().y;
+		setOffsetX(newOffsetX);
+		setOffsetY(newOffsetY);
+	};
+
+	const handleMouseUp = () => {
+		setIsDragging(false);
 	};
 
 	return (
