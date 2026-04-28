@@ -9,11 +9,15 @@ type ControlPanelProps = {
 };
 
 export default function ControlPanel(props: ControlPanelProps) {
-  const [activeTab, setActiveTab] = createSignal<"main" | "appearance" | "system" | "about">("main");
+  const [activeTab, setActiveTab] = createSignal<"main" | "appearance" | "system" | "about" | "storage">("main");
   const [selectedTheme, setSelectedTheme] = createSignal("Nebula Dark");
   const [selectedWallpaper, setSelectedWallpaper] = createSignal("Deep Space");
   const [selectedLanguage, setSelectedLanguage] = createSignal("English");
   const [selectedTimeFormat, setSelectedTimeFormat] = createSignal("24-hour");
+  const totalStorageGb = 256;
+  const usedStorageGb = 93;
+  const freeStorageGb = totalStorageGb - usedStorageGb;
+  const usedPct = Math.round((usedStorageGb / totalStorageGb) * 100);
 
   const resetSettings = () => {
     setSelectedTheme("Nebula Dark");
@@ -126,6 +130,26 @@ export default function ControlPanel(props: ControlPanelProps) {
                 <span style={{ "font-size": "1.35rem" }}>ℹ</span>
                 <strong style={{ "font-size": "0.9rem" }}>About</strong>
                 <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Build and product details</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("storage")}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.04)",
+                  "border-radius": "12px",
+                  padding: "0.85rem",
+                  color: "#edf0ff",
+                  display: "grid",
+                  gap: "0.45rem",
+                  "justify-items": "start",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ "font-size": "1.35rem" }}>💾</span>
+                <strong style={{ "font-size": "0.9rem" }}>Storage</strong>
+                <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Used and free account space</span>
               </button>
             </div>
           </>
@@ -257,6 +281,94 @@ export default function ControlPanel(props: ControlPanelProps) {
               <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>UI Module: nebula-ui</p>
               <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Version: 0.1.0-dev</p>
               <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Runtime: SolidStart Desktop Shell (Mock)</p>
+            </div>
+          </>
+        )}
+
+        {activeTab() === "storage" && (
+          <>
+            <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>Storage</h3>
+            <p style={{ color: "#9ea7cf", "font-size": "0.8rem" }}>
+              Review your account storage usage and available free space.
+            </p>
+
+            <div
+              style={{
+                display: "grid",
+                "grid-template-columns": "repeat(auto-fit, minmax(170px, 1fr))",
+                gap: "0.65rem",
+              }}
+            >
+              <div
+                style={{
+                  padding: "0.75rem",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  "border-radius": "10px",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+              >
+                <p style={{ color: "#9ea7cf", "font-size": "0.78rem" }}>Total</p>
+                <strong style={{ color: "#e6ebff", "font-size": "1rem" }}>{totalStorageGb} GB</strong>
+              </div>
+
+              <div
+                style={{
+                  padding: "0.75rem",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  "border-radius": "10px",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+              >
+                <p style={{ color: "#9ea7cf", "font-size": "0.78rem" }}>Used</p>
+                <strong style={{ color: "#fca5a5", "font-size": "1rem" }}>{usedStorageGb} GB</strong>
+              </div>
+
+              <div
+                style={{
+                  padding: "0.75rem",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  "border-radius": "10px",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+              >
+                <p style={{ color: "#9ea7cf", "font-size": "0.78rem" }}>Free</p>
+                <strong style={{ color: "#86efac", "font-size": "1rem" }}>{freeStorageGb} GB</strong>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gap: "0.45rem",
+                padding: "0.75rem",
+                border: "1px solid rgba(255,255,255,0.12)",
+                "border-radius": "10px",
+                background: "rgba(255,255,255,0.03)",
+              }}
+            >
+              <div style={{ display: "flex", "justify-content": "space-between", color: "#c9d2f3", "font-size": "0.8rem" }}>
+                <span>Usage</span>
+                <span>{usedPct}% used</span>
+              </div>
+              <div
+                style={{
+                  height: "10px",
+                  background: "rgba(255,255,255,0.1)",
+                  "border-radius": "999px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${usedPct}%`,
+                    height: "100%",
+                    background: "linear-gradient(90deg, #fb7185, #f59e0b)",
+                  }}
+                />
+              </div>
+              <p style={{ color: "#9ea7cf", "font-size": "0.76rem" }}>
+                Upgrade storage plan when free space becomes limited.
+              </p>
             </div>
           </>
         )}

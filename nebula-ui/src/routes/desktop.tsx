@@ -6,6 +6,8 @@ import AITerminal, { type AIMessage } from "../apps/AITerminal";
 import TaskManager, { type AppRuntimeRow } from "../apps/TaskManager";
 import TextEditor from "../apps/TextEditor";
 import ImageViewer from "../apps/ImageViewer";
+import Mail from "../apps/Mail";
+import AppDock from "../components/AppDock";
 
 export const route = {
   ssr: false,
@@ -18,7 +20,8 @@ type WindowId =
   | "ai-terminal"
   | "task-manager"
   | "text-editor"
-  | "image-viewer";
+  | "image-viewer"
+  | "mail";
 
 export default function Desktop() {
   const [timeText, setTimeText] = createSignal("--:--");
@@ -36,6 +39,8 @@ export default function Desktop() {
   const [isTextEditorMinimized, setIsTextEditorMinimized] = createSignal(false);
   const [isImageViewerOpen, setIsImageViewerOpen] = createSignal(false);
   const [isImageViewerMinimized, setIsImageViewerMinimized] = createSignal(false);
+  const [isMailOpen, setIsMailOpen] = createSignal(false);
+  const [isMailMinimized, setIsMailMinimized] = createSignal(false);
   const [usagePulse, setUsagePulse] = createSignal(0);
   const [installedAppIds, setInstalledAppIds] = createSignal<string[]>([]);
   const [windowStack, setWindowStack] = createSignal<WindowId[]>([
@@ -46,6 +51,7 @@ export default function Desktop() {
     "task-manager",
     "text-editor",
     "image-viewer",
+    "mail",
   ]);
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
@@ -76,6 +82,7 @@ export default function Desktop() {
     if (["task manager", "tasks", "processes", "task-manager"].includes(key)) return "task-manager";
     if (["text editor", "editor", "notes", "text"].includes(key)) return "text-editor";
     if (["image viewer", "viewer", "images", "gallery", "photos"].includes(key)) return "image-viewer";
+    if (["mail", "email", "inbox", "messages"].includes(key)) return "mail";
     return null;
   };
 
@@ -86,6 +93,7 @@ export default function Desktop() {
     if (target === "task-manager") return "Task Manager";
     if (target === "text-editor") return "Text Editor";
     if (target === "image-viewer") return "Image Viewer";
+    if (target === "mail") return "Mail";
     return "AI Terminal";
   };
 
@@ -125,6 +133,11 @@ export default function Desktop() {
       setIsImageViewerMinimized(false);
     }
 
+    if (target === "mail") {
+      setIsMailOpen(true);
+      setIsMailMinimized(false);
+    }
+
     bringWindowToFront(target);
   };
 
@@ -136,6 +149,7 @@ export default function Desktop() {
     if (target === "task-manager") setIsTaskManagerMinimized(true);
     if (target === "text-editor") setIsTextEditorMinimized(true);
     if (target === "image-viewer") setIsImageViewerMinimized(true);
+    if (target === "mail") setIsMailMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -173,6 +187,11 @@ export default function Desktop() {
       setIsImageViewerOpen(false);
       setIsImageViewerMinimized(false);
     }
+
+    if (target === "mail") {
+      setIsMailOpen(false);
+      setIsMailMinimized(false);
+    }
   };
 
   const runAITerminalCommand = (input: string) => {
@@ -196,7 +215,7 @@ export default function Desktop() {
     if (/^help$|^commands$|what can you do|capabilities/.test(lowered)) {
       appendAIMessage(
         "assistant",
-        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer.",
+        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer, mail.",
       );
       return;
     }
@@ -206,7 +225,7 @@ export default function Desktop() {
       return;
     }
 
-    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos)/);
+    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos|mail|email|inbox|messages)/);
 
     if (actionMatch) {
       const action = actionMatch[1];
@@ -244,7 +263,7 @@ export default function Desktop() {
 
     appendAIMessage(
       "assistant",
-      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, show time, help.",
+      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, open mail, show time, help.",
     );
   };
 
@@ -276,6 +295,7 @@ export default function Desktop() {
     if (isTaskManagerOpen()) rows.push({ appName: "Task Manager", icon: "📊", status: "Running", memoryMb: rand(9, 22, 44), cpuPercent: rand(10, 0, 3) });
     if (isTextEditorOpen()) rows.push({ appName: "Text Editor", icon: "📝", status: "Running", memoryMb: rand(11, 24, 58), cpuPercent: rand(12, 0, 5) });
     if (isImageViewerOpen()) rows.push({ appName: "Image Viewer", icon: "🖼", status: "Running", memoryMb: rand(13, 62, 130), cpuPercent: rand(14, 1, 9) });
+    if (isMailOpen()) rows.push({ appName: "Mail", icon: "📧", status: "Running", memoryMb: rand(15, 45, 98), cpuPercent: rand(16, 0, 6) });
     return rows;
   });
 
@@ -572,6 +592,43 @@ export default function Desktop() {
           <span style={{ "font-size": "0.82rem" }}>Image Viewer</span>
         </button>
 
+        <button
+          type="button"
+          onClick={() => openAppWindow("mail")}
+          style={{
+            position: "absolute",
+            top: "41.5rem",
+            left: "1.25rem",
+            border: "none",
+            background: "transparent",
+            display: "flex",
+            "flex-direction": "column",
+            "align-items": "center",
+            gap: "0.4rem",
+            color: "#d6d6ff",
+            cursor: "pointer",
+            width: "84px",
+          }}
+          aria-label="Open Mail"
+          title="Mail"
+        >
+          <span
+            style={{
+              width: "56px",
+              height: "56px",
+              "border-radius": "14px",
+              background: "linear-gradient(135deg, #6366f1, #06b6d4)",
+              display: "grid",
+              "place-items": "center",
+              "box-shadow": "0 8px 24px rgba(99,102,241,0.35)",
+              "font-size": "1.45rem",
+            }}
+          >
+            📧
+          </span>
+          <span style={{ "font-size": "0.82rem" }}>Mail</span>
+        </button>
+
         <div style={{ margin: "auto", "text-align": "center" }}>
           <p
             style={{
@@ -669,6 +726,15 @@ export default function Desktop() {
             zIndex={getWindowZIndex("image-viewer")}
           />
         )}
+
+        {isMailOpen() && !isMailMinimized() && (
+          <Mail
+            onClose={() => closeAppWindow("mail")}
+            onMinimize={() => minimizeAppWindow("mail")}
+            onFocus={() => bringWindowToFront("mail")}
+            zIndex={getWindowZIndex("mail")}
+          />
+        )}
       </main>
 
       {/* Taskbar */}
@@ -696,169 +762,82 @@ export default function Desktop() {
         >
           NebulaOS{installedAppIds().length > 0 ? ` • ${installedAppIds().length} apps installed` : ""}
         </span>
-        <div style={{ display: "flex", "align-items": "center", gap: "0.45rem" }}>
-          {isStoreOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsStoreMinimized(false);
-                bringWindowToFront("store");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore App Store"
-              aria-label="Restore App Store"
-            >
-              🛍
-            </button>
-          )}
-          {isExplorerOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsExplorerMinimized(false);
-                bringWindowToFront("explorer");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore File Explorer"
-              aria-label="Restore File Explorer"
-            >
-              📁
-            </button>
-          )}
-          {isControlPanelOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsControlPanelMinimized(false);
-                bringWindowToFront("control-panel");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore Control Panel"
-              aria-label="Restore Control Panel"
-            >
-              ⚙
-            </button>
-          )}
-          {isAITerminalOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsAITerminalMinimized(false);
-                bringWindowToFront("ai-terminal");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore AI Terminal"
-              aria-label="Restore AI Terminal"
-            >
-              🤖
-            </button>
-          )}
-          {isTaskManagerOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsTaskManagerMinimized(false);
-                bringWindowToFront("task-manager");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore Task Manager"
-              aria-label="Restore Task Manager"
-            >
-              📊
-            </button>
-          )}
-          {isTextEditorOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsTextEditorMinimized(false);
-                bringWindowToFront("text-editor");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore Text Editor"
-              aria-label="Restore Text Editor"
-            >
-              📝
-            </button>
-          )}
-          {isImageViewerOpen() && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsImageViewerMinimized(false);
-                bringWindowToFront("image-viewer");
-              }}
-              style={{
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e5e6ff",
-                "border-radius": "10px",
-                width: "34px",
-                height: "30px",
-                cursor: "pointer",
-                "font-size": "1rem",
-              }}
-              title="Restore Image Viewer"
-              aria-label="Restore Image Viewer"
-            >
-              🖼
-            </button>
-          )}
-        </div>
+        <AppDock
+          items={[
+            {
+              id: "store",
+              title: "App Store",
+              icon: "🛍",
+              isOpen: isStoreOpen(),
+              isMinimized: isStoreMinimized(),
+              onRestore: () => { setIsStoreMinimized(false); bringWindowToFront("store"); },
+              onMinimize: () => setIsStoreMinimized(true),
+            },
+            {
+              id: "explorer",
+              title: "File Explorer",
+              icon: "📁",
+              isOpen: isExplorerOpen(),
+              isMinimized: isExplorerMinimized(),
+              onRestore: () => { setIsExplorerMinimized(false); bringWindowToFront("explorer"); },
+              onMinimize: () => setIsExplorerMinimized(true),
+            },
+            {
+              id: "control-panel",
+              title: "Control Panel",
+              icon: "⚙",
+              isOpen: isControlPanelOpen(),
+              isMinimized: isControlPanelMinimized(),
+              onRestore: () => { setIsControlPanelMinimized(false); bringWindowToFront("control-panel"); },
+              onMinimize: () => setIsControlPanelMinimized(true),
+            },
+            {
+              id: "ai-terminal",
+              title: "AI Terminal",
+              icon: "🤖",
+              isOpen: isAITerminalOpen(),
+              isMinimized: isAITerminalMinimized(),
+              onRestore: () => { setIsAITerminalMinimized(false); bringWindowToFront("ai-terminal"); },
+              onMinimize: () => setIsAITerminalMinimized(true),
+            },
+            {
+              id: "task-manager",
+              title: "Task Manager",
+              icon: "📊",
+              isOpen: isTaskManagerOpen(),
+              isMinimized: isTaskManagerMinimized(),
+              onRestore: () => { setIsTaskManagerMinimized(false); bringWindowToFront("task-manager"); },
+              onMinimize: () => setIsTaskManagerMinimized(true),
+            },
+            {
+              id: "text-editor",
+              title: "Text Editor",
+              icon: "📝",
+              isOpen: isTextEditorOpen(),
+              isMinimized: isTextEditorMinimized(),
+              onRestore: () => { setIsTextEditorMinimized(false); bringWindowToFront("text-editor"); },
+              onMinimize: () => setIsTextEditorMinimized(true),
+            },
+            {
+              id: "image-viewer",
+              title: "Image Viewer",
+              icon: "🖼",
+              isOpen: isImageViewerOpen(),
+              isMinimized: isImageViewerMinimized(),
+              onRestore: () => { setIsImageViewerMinimized(false); bringWindowToFront("image-viewer"); },
+              onMinimize: () => setIsImageViewerMinimized(true),
+            },
+            {
+              id: "mail",
+              title: "Mail",
+              icon: "📧",
+              isOpen: isMailOpen(),
+              isMinimized: isMailMinimized(),
+              onRestore: () => { setIsMailMinimized(false); bringWindowToFront("mail"); },
+              onMinimize: () => setIsMailMinimized(true),
+            },
+          ]}
+        />
         <span style={{ "font-size": "0.8rem", color: "#6060a0" }}>
           {timeText()}
         </span>
