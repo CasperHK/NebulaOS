@@ -40,15 +40,24 @@ const GALLERY: GalleryImage[] = [
 export default function ImageViewer(props: ImageViewerProps) {
 	const [index, setIndex] = createSignal(0);
 	const [fitContain, setFitContain] = createSignal(true);
+	const [zoom, setZoom] = createSignal(1);
 
 	const current = () => GALLERY[index()];
 
 	const previous = () => {
+		setZoom(1);
 		setIndex((i) => (i - 1 + GALLERY.length) % GALLERY.length);
 	};
 
 	const next = () => {
+		setZoom(1);
 		setIndex((i) => (i + 1) % GALLERY.length);
+	};
+
+	const handleWheel = (e: WheelEvent) => {
+		e.preventDefault();
+		const delta = e.deltaY < 0 ? 0.1 : -0.1;
+		setZoom((z) => Math.min(5, Math.max(0.2, +(z + delta).toFixed(2))));
 	};
 
 	return (
@@ -127,16 +136,36 @@ export default function ImageViewer(props: ImageViewerProps) {
 						>
 							{fitContain() ? "Contain" : "Cover"}
 						</button>
+						{zoom() !== 1 && (
+							<button
+								type="button"
+								onClick={() => setZoom(1)}
+								style={{
+									border: "1px solid rgba(255,255,255,0.16)",
+									background: "rgba(255,255,255,0.07)",
+									color: "#e8ecff",
+									"border-radius": "8px",
+									padding: "0.35rem 0.6rem",
+									cursor: "pointer",
+									"font-size": "0.78rem",
+								}}
+							>
+								{Math.round(zoom() * 100)}% ✕
+							</button>
+						)}
 					</div>
 				</div>
 
 				<div
+					onWheel={handleWheel}
 					style={{
 						flex: "1",
 						background: "rgba(2,5,16,0.88)",
 						display: "grid",
 						"place-items": "center",
 						padding: "0.8rem",
+						overflow: "hidden",
+						cursor: zoom() !== 1 ? "grab" : "default",
 					}}
 				>
 					<img
@@ -147,6 +176,10 @@ export default function ImageViewer(props: ImageViewerProps) {
 							height: "100%",
 							"object-fit": fitContain() ? "contain" : "cover",
 							"border-radius": "10px",
+							transform: `scale(${zoom()})`,
+							"transform-origin": "center",
+							transition: "transform 0.1s ease",
+							"pointer-events": "none",
 						}}
 					/>
 				</div>
