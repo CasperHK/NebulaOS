@@ -43,6 +43,7 @@ export default function Home() {
 
       <A
         href="/login"
+        preload={false}
         style={{
           display: "inline-block",
           padding: "0.85rem 2.5rem",
