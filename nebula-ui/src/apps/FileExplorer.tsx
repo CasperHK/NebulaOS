@@ -101,6 +101,18 @@ export default function FileExplorer(props: FileExplorerProps) {
   const [contextMenuId, setContextMenuId] = createSignal<string | null>(null);
   const [contextMenuPos, setContextMenuPos] = createSignal({ x: 0, y: 0 });
   const [copiedItemId, setCopiedItemId] = createSignal<string | null>(null);
+  const [showCreateSubmenu, setShowCreateSubmenu] = createSignal(false);
+  const [submenuPos, setSubmenuPos] = createSignal({ x: 0, y: 0 });
+
+  const fileTypeOptions = [
+    { label: "📄 Text File", ext: ".txt", name: "NewFile.txt" },
+    { label: "📝 Markdown File", ext: ".md", name: "NewFile.md" },
+    { label: "📘 Word Document", ext: ".docx", name: "NewFile.docx" },
+    { label: "📊 Excel Spreadsheet", ext: ".xlsx", name: "NewFile.xlsx" },
+    { label: "🖼️ PDF Document", ext: ".pdf", name: "NewFile.pdf" },
+    { label: "{ } JSON File", ext: ".json", name: "NewFile.json" },
+    { label: "⚙️ JavaScript File", ext: ".js", name: "NewFile.js" },
+  ];
 
   const isImageFile = (fileName: string): boolean => {
     const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".svg"];
@@ -144,6 +156,76 @@ export default function FileExplorer(props: FileExplorerProps) {
   };
 
   const closeMenu = () => setContextMenuId(null);
+
+  const handleCreateFile = (option: (typeof fileTypeOptions)[0]) => {
+    const targetFolder = findNode(FILE_TREE, currentFolderId());
+    if (!targetFolder || targetFolder.type !== "folder") return;
+
+    let fileName = option.name;
+    let counter = 1;
+    
+    // Handle duplicate names
+    if (targetFolder.children) {
+      while (targetFolder.children.some((child) => child.name === fileName)) {
+        const nameParts = fileName.split(".");
+        const ext = nameParts.pop();
+        const baseName = nameParts.join(".");
+        fileName = `${baseName} (${counter}).${ext}`;
+        counter++;
+      }
+    }
+
+    const newFile: FileNode = {
+      id: `file-${Date.now()}-${Math.random()}`,
+      name: fileName,
+      type: "file",
+      size: "0 KB",
+      content: "",
+    };
+
+    if (!targetFolder.children) {
+      targetFolder.children = [];
+    }
+    targetFolder.children.push(newFile);
+    closeMenu();
+    setShowCreateSubmenu(false);
+  };
+
+  const handleEmptyAreaContextMenu = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Check if the click is actually on empty area, not on a file/folder
+    const target = e.target as HTMLElement;
+    if (target.closest("button")) return;
+
+    setContextMenuId("empty-area");
+    let x = e.clientX + 5;
+    let y = e.clientY + 5;
+
+    if (x + 160 > window.innerWidth) {
+      x = window.innerWidth - 170;
+    }
+    if (y + 150 > window.innerHeight) {
+      y = window.innerHeight - 160;
+    }
+
+    setContextMenuPos({ x, y });
+    setShowCreateSubmenu(false);
+  };
+
+  const handleCreateButtonHover = (e: HTMLElement) => {
+    const rect = e.getBoundingClientRect();
+    let submenuX = rect.right + 5;
+    let submenuY = rect.top;
+
+    if (submenuX + 200 > window.innerWidth) {
+      submenuX = rect.left - 200;
+    }
+
+    setSubmenuPos({ x: submenuX, y: submenuY });
+    setShowCreateSubmenu(true);
+  };
 
   const handleCopy = (itemId: string) => {
     setCopiedItemId(itemId);
@@ -312,7 +394,7 @@ export default function FileExplorer(props: FileExplorerProps) {
             </For>
           </div>
 
-          <div style={{ padding: "0.9rem", overflow: "auto", display: "grid", gap: "0.55rem" }}>
+          <div style={{ padding: "0.9rem", overflow: "auto", display: "grid", gap: "0.55rem" }} onContextMenu={handleEmptyAreaContextMenu}>
             <For each={folderItems()}>
               {(folder) => (
                 <button
@@ -409,7 +491,41 @@ export default function FileExplorer(props: FileExplorerProps) {
               padding: "4px 0",
             }}
           >
-            <Show when={contextMenuId() !== null}>
+            <Show when={contextMenuId() === "empty-area"}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  handleCreateButtonHover(e.currentTarget);
+                }}
+                onMouseEnter={(e) => {
+                  handleCreateButtonHover(e.currentTarget);
+                }}
+                onMouseLeave={() => {
+                  setShowCreateSubmenu(false);
+                }}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 16px",
+                  background: "transparent",
+                  border: "none",
+                  color: "#e5e6ff",
+                  "text-align": "left",
+                  cursor: "pointer",
+                  "font-size": "0.9rem",
+                  transition: "background 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255, 255, 255, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
+              >
+                ✨ Create
+              </button>
+            </Show>
+            <Show when={contextMenuId() !== "empty-area"}>
               {(() => {
                 const node = findNode(FILE_TREE, contextMenuId()!);
                 return (
@@ -534,6 +650,59 @@ export default function FileExplorer(props: FileExplorerProps) {
               })()}
             </Show>
           </div>
+
+          {/* Create File Submenu */}
+          <Show when={showCreateSubmenu() && contextMenuId() === "empty-area"}>
+            <div
+              style={{
+                position: "fixed",
+                top: submenuPos().y + "px",
+                left: submenuPos().x + "px",
+                "z-index": 1000,
+                background: "rgba(20, 20, 30, 0.95)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                "border-radius": "8px",
+                "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+                "backdrop-filter": "blur(8px)",
+                "min-width": "180px",
+                padding: "4px 0",
+              }}
+              onMouseLeave={() => {
+                setShowCreateSubmenu(false);
+              }}
+            >
+              <For each={fileTypeOptions}>
+                {(option) => (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCreateFile(option);
+                    }}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      padding: "8px 16px",
+                      background: "transparent",
+                      border: "none",
+                      color: "#e5e6ff",
+                      "text-align": "left",
+                      cursor: "pointer",
+                      "font-size": "0.9rem",
+                      transition: "background 0.1s",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = "rgba(255, 255, 255, 0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = "transparent";
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                )}
+              </For>
+            </div>
+          </Show>
         </Show>
       </div>
     </Windows>
