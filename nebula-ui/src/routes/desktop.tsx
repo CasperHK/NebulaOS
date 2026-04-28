@@ -1,152 +1,15 @@
-import { For, createMemo, createSignal, onCleanup, onMount } from "solid-js";
-import Windows from "../components/Windows";
+import { createMemo, createSignal, onCleanup, onMount } from "solid-js";
+import AppStore from "../apps/AppStore";
+import FileExplorer from "../apps/FileExplorer";
+import ControlPanel from "../apps/ControlPanel";
+import AITerminal, { type AIMessage } from "../apps/AITerminal";
+import TaskManager, { type AppRuntimeRow } from "../apps/TaskManager";
 
 export const route = {
   ssr: false,
 };
 
-type StoreApp = {
-  id: string;
-  name: string;
-  category: string;
-  rating: number;
-  size: string;
-  description: string;
-};
-
-const STORE_APPS: StoreApp[] = [
-  {
-    id: "notes-pro",
-    name: "Notes Pro",
-    category: "Productivity",
-    rating: 4.8,
-    size: "12 MB",
-    description: "Fast markdown notes with cloud sync and AI summaries.",
-  },
-  {
-    id: "nova-mail",
-    name: "Nova Mail",
-    category: "Communication",
-    rating: 4.6,
-    size: "48 MB",
-    description: "Unified inbox for email, calendar, and team messages.",
-  },
-  {
-    id: "pixel-lab",
-    name: "Pixel Lab",
-    category: "Design",
-    rating: 4.9,
-    size: "86 MB",
-    description: "Vector and raster editor optimized for browser workflows.",
-  },
-  {
-    id: "focus-flow",
-    name: "Focus Flow",
-    category: "Wellness",
-    rating: 4.5,
-    size: "9 MB",
-    description: "Pomodoro timer, ambient audio, and deep-work analytics.",
-  },
-  {
-    id: "terminal-x",
-    name: "Terminal X",
-    category: "Developer Tools",
-    rating: 4.7,
-    size: "22 MB",
-    description: "Developer terminal with tab sessions and snippets.",
-  },
-];
-
-type FileNode = {
-  id: string;
-  name: string;
-  type: "folder" | "file";
-  size?: string;
-  children?: FileNode[];
-};
-
 type WindowId = "store" | "explorer" | "control-panel" | "ai-terminal" | "task-manager";
-
-type AIMessage = {
-  id: string;
-  role: "user" | "assistant";
-  text: string;
-};
-
-type AppRuntimeRow = {
-  appName: string;
-  icon: string;
-  status: string;
-  memoryMb: number;
-  cpuPercent: number;
-};
-
-const FILE_TREE: FileNode = {
-  id: "root",
-  name: "Home",
-  type: "folder",
-  children: [
-    {
-      id: "documents",
-      name: "Documents",
-      type: "folder",
-      children: [
-        { id: "roadmap", name: "Nebula-Roadmap.md", type: "file", size: "128 KB" },
-        { id: "meeting-notes", name: "Meeting-Notes.txt", type: "file", size: "42 KB" },
-      ],
-    },
-    {
-      id: "projects",
-      name: "Projects",
-      type: "folder",
-      children: [
-        { id: "kernel-go", name: "nebula-kernel", type: "folder", children: [] },
-        { id: "ui-src", name: "nebula-ui", type: "folder", children: [] },
-      ],
-    },
-    {
-      id: "downloads",
-      name: "Downloads",
-      type: "folder",
-      children: [
-        { id: "release-zip", name: "release-candidate.zip", type: "file", size: "38 MB" },
-      ],
-    },
-    {
-      id: "pictures",
-      name: "Pictures",
-      type: "folder",
-      children: [
-        { id: "nebula-wall", name: "nebula-wallpaper.png", type: "file", size: "5.4 MB" },
-      ],
-    },
-  ],
-};
-
-function findNode(node: FileNode, targetId: string): FileNode | null {
-  if (node.id === targetId) return node;
-  if (!node.children) return null;
-
-  for (const child of node.children) {
-    const found = findNode(child, targetId);
-    if (found) return found;
-  }
-
-  return null;
-}
-
-function findPath(node: FileNode, targetId: string, chain: FileNode[] = []): FileNode[] | null {
-  const nextChain = [...chain, node];
-  if (node.id === targetId) return nextChain;
-  if (!node.children) return null;
-
-  for (const child of node.children) {
-    const foundChain = findPath(child, targetId, nextChain);
-    if (foundChain) return foundChain;
-  }
-
-  return null;
-}
 
 export default function Desktop() {
   const [timeText, setTimeText] = createSignal("--:--");
