@@ -47,6 +47,7 @@ export default function Desktop() {
   const [isMailMinimized, setIsMailMinimized] = createSignal(false);
   const [usagePulse, setUsagePulse] = createSignal(0);
   const [installedAppIds, setInstalledAppIds] = createSignal<string[]>([]);
+  const [pinnedAppIds, setPinnedAppIds] = createSignal<WindowId[]>([]);
   const [windowStack, setWindowStack] = createSignal<WindowId[]>([
     "store",
     "explorer",
@@ -320,7 +321,25 @@ export default function Desktop() {
   const totalMemoryMb = createMemo(() => runtimeRows().reduce((sum, r) => sum + r.memoryMb, 0));
   const totalCpuPct = createMemo(() => runtimeRows().reduce((sum, r) => sum + r.cpuPercent, 0));
 
+  const savePinnedApps = (ids: WindowId[]) => {
+    try {
+      localStorage.setItem("nebula:pinnedApps", JSON.stringify(ids));
+    } catch (e) {
+      console.error("Failed to save pinned apps:", e);
+    }
+  };
+
   onMount(() => {
+    // Load pinned apps from localStorage
+    try {
+      const saved = localStorage.getItem("nebula:pinnedApps");
+      if (saved) {
+        setPinnedAppIds(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error("Failed to load pinned apps:", e);
+    }
+
     const formatTime = () =>
       new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
@@ -819,8 +838,11 @@ export default function Desktop() {
               icon: "🛍",
               isOpen: isStoreOpen(),
               isMinimized: isStoreMinimized(),
-              onRestore: () => { setIsStoreMinimized(false); bringWindowToFront("store"); },
+              isPinned: pinnedAppIds().includes("store"),
+              onRestore: () => openAppWindow("store"),
               onMinimize: () => setIsStoreMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "store"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "store"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "explorer",
@@ -828,8 +850,11 @@ export default function Desktop() {
               icon: "📁",
               isOpen: isExplorerOpen(),
               isMinimized: isExplorerMinimized(),
-              onRestore: () => { setIsExplorerMinimized(false); bringWindowToFront("explorer"); },
+              isPinned: pinnedAppIds().includes("explorer"),
+              onRestore: () => openAppWindow("explorer"),
               onMinimize: () => setIsExplorerMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "explorer"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "explorer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "control-panel",
@@ -837,8 +862,11 @@ export default function Desktop() {
               icon: "⚙",
               isOpen: isControlPanelOpen(),
               isMinimized: isControlPanelMinimized(),
-              onRestore: () => { setIsControlPanelMinimized(false); bringWindowToFront("control-panel"); },
+              isPinned: pinnedAppIds().includes("control-panel"),
+              onRestore: () => openAppWindow("control-panel"),
               onMinimize: () => setIsControlPanelMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "control-panel"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "control-panel"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "ai-terminal",
@@ -846,8 +874,11 @@ export default function Desktop() {
               icon: "🤖",
               isOpen: isAITerminalOpen(),
               isMinimized: isAITerminalMinimized(),
-              onRestore: () => { setIsAITerminalMinimized(false); bringWindowToFront("ai-terminal"); },
+              isPinned: pinnedAppIds().includes("ai-terminal"),
+              onRestore: () => openAppWindow("ai-terminal"),
               onMinimize: () => setIsAITerminalMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "ai-terminal"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "ai-terminal"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "task-manager",
@@ -855,8 +886,11 @@ export default function Desktop() {
               icon: "📊",
               isOpen: isTaskManagerOpen(),
               isMinimized: isTaskManagerMinimized(),
-              onRestore: () => { setIsTaskManagerMinimized(false); bringWindowToFront("task-manager"); },
+              isPinned: pinnedAppIds().includes("task-manager"),
+              onRestore: () => openAppWindow("task-manager"),
               onMinimize: () => setIsTaskManagerMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "task-manager"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "task-manager"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "text-editor",
@@ -864,8 +898,11 @@ export default function Desktop() {
               icon: "📝",
               isOpen: isTextEditorOpen(),
               isMinimized: isTextEditorMinimized(),
-              onRestore: () => { setIsTextEditorMinimized(false); bringWindowToFront("text-editor"); },
+              isPinned: pinnedAppIds().includes("text-editor"),
+              onRestore: () => openAppWindow("text-editor"),
               onMinimize: () => setIsTextEditorMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "text-editor"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "text-editor"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "image-viewer",
@@ -873,8 +910,11 @@ export default function Desktop() {
               icon: "🖼",
               isOpen: isImageViewerOpen(),
               isMinimized: isImageViewerMinimized(),
-              onRestore: () => { setIsImageViewerMinimized(false); bringWindowToFront("image-viewer"); },
+              isPinned: pinnedAppIds().includes("image-viewer"),
+              onRestore: () => openAppWindow("image-viewer"),
               onMinimize: () => setIsImageViewerMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "image-viewer"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "image-viewer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "mail",
@@ -882,8 +922,11 @@ export default function Desktop() {
               icon: "📧",
               isOpen: isMailOpen(),
               isMinimized: isMailMinimized(),
-              onRestore: () => { setIsMailMinimized(false); bringWindowToFront("mail"); },
+              isPinned: pinnedAppIds().includes("mail"),
+              onRestore: () => openAppWindow("mail"),
               onMinimize: () => setIsMailMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "mail"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "mail"); setPinnedAppIds(next); savePinnedApps(next); },
             },
           ]}
         />
