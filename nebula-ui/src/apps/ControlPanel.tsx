@@ -9,7 +9,7 @@ type ControlPanelProps = {
 };
 
 export default function ControlPanel(props: ControlPanelProps) {
-  const [activeTab, setActiveTab] = createSignal<"appearance" | "system" | "about">("appearance");
+  const [activeTab, setActiveTab] = createSignal<"main" | "appearance" | "system" | "about">("main");
   const [selectedTheme, setSelectedTheme] = createSignal("Nebula Dark");
   const [selectedWallpaper, setSelectedWallpaper] = createSignal("Deep Space");
   const [selectedLanguage, setSelectedLanguage] = createSignal("English");
@@ -34,65 +34,103 @@ export default function ControlPanel(props: ControlPanelProps) {
       height="min(590px, 84vh)"
       background="rgba(10,12,32,0.93)"
     >
-      <div
-        style={{
-          display: "flex",
-          gap: "0.45rem",
-          padding: "0.9rem 1rem",
-          border: "1px solid rgba(255,255,255,0.08)",
-          "border-left": "none",
-          "border-right": "none",
-          "border-top": "none",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => setActiveTab("appearance")}
-          style={{
-            border: "none",
-            padding: "0.45rem 0.75rem",
-            "border-radius": "8px",
-            background: activeTab() === "appearance" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-            color: "#dde0ff",
-            cursor: "pointer",
-            "font-size": "0.82rem",
-          }}
-        >
-          Appearance
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("system")}
-          style={{
-            border: "none",
-            padding: "0.45rem 0.75rem",
-            "border-radius": "8px",
-            background: activeTab() === "system" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-            color: "#dde0ff",
-            cursor: "pointer",
-            "font-size": "0.82rem",
-          }}
-        >
-          System
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("about")}
-          style={{
-            border: "none",
-            padding: "0.45rem 0.75rem",
-            "border-radius": "8px",
-            background: activeTab() === "about" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-            color: "#dde0ff",
-            cursor: "pointer",
-            "font-size": "0.82rem",
-          }}
-        >
-          About
-        </button>
-      </div>
-
       <div style={{ padding: "1rem", overflow: "auto", display: "grid", gap: "1rem" }}>
+        {activeTab() !== "main" && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("main")}
+            style={{
+              width: "fit-content",
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "rgba(255,255,255,0.07)",
+              color: "#e4e8ff",
+              "border-radius": "8px",
+              padding: "0.38rem 0.65rem",
+              "font-size": "0.78rem",
+              cursor: "pointer",
+            }}
+          >
+            ← Back to Main
+          </button>
+        )}
+
+        {activeTab() === "main" && (
+          <>
+            <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>Control Panel</h3>
+            <p style={{ color: "#9ea7cf", "font-size": "0.82rem" }}>
+              Choose a category to manage NebulaOS settings.
+            </p>
+
+            <div
+              style={{
+                display: "grid",
+                "grid-template-columns": "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "0.75rem",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveTab("appearance")}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.04)",
+                  "border-radius": "12px",
+                  padding: "0.85rem",
+                  color: "#edf0ff",
+                  display: "grid",
+                  gap: "0.45rem",
+                  "justify-items": "start",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ "font-size": "1.35rem" }}>🎨</span>
+                <strong style={{ "font-size": "0.9rem" }}>Appearance</strong>
+                <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Theme and wallpaper</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("system")}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.04)",
+                  "border-radius": "12px",
+                  padding: "0.85rem",
+                  color: "#edf0ff",
+                  display: "grid",
+                  gap: "0.45rem",
+                  "justify-items": "start",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ "font-size": "1.35rem" }}>🛠</span>
+                <strong style={{ "font-size": "0.9rem" }}>System</strong>
+                <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Language and time format</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("about")}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.04)",
+                  "border-radius": "12px",
+                  padding: "0.85rem",
+                  color: "#edf0ff",
+                  display: "grid",
+                  gap: "0.45rem",
+                  "justify-items": "start",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ "font-size": "1.35rem" }}>ℹ</span>
+                <strong style={{ "font-size": "0.9rem" }}>About</strong>
+                <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Build and product details</span>
+              </button>
+            </div>
+          </>
+        )}
+
         {activeTab() === "appearance" && (
           <>
             <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>Appearance</h3>
