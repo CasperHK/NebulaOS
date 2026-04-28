@@ -1,4 +1,4 @@
-import { For, createMemo, createSignal } from "solid-js";
+import { For, Show, createMemo, createSignal } from "solid-js";
 import Windows from "../components/Windows";
 
 type FileNode = {
@@ -98,6 +98,9 @@ type FileExplorerProps = {
 
 export default function FileExplorer(props: FileExplorerProps) {
   const [currentFolderId, setCurrentFolderId] = createSignal("root");
+  const [contextMenuId, setContextMenuId] = createSignal<string | null>(null);
+  const [contextMenuPos, setContextMenuPos] = createSignal({ x: 0, y: 0 });
+  const [copiedItemId, setCopiedItemId] = createSignal<string | null>(null);
 
   const isImageFile = (fileName: string): boolean => {
     const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".svg"];
@@ -120,6 +123,66 @@ export default function FileExplorer(props: FileExplorerProps) {
       ".xml",
     ];
     return textExtensions.some((ext) => fileName.toLowerCase().endsWith(ext));
+  };
+
+  const handleContextMenu = (e: MouseEvent, itemId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenuId(itemId);
+
+    let x = e.clientX + 5;
+    let y = e.clientY + 5;
+
+    if (x + 160 > window.innerWidth) {
+      x = window.innerWidth - 170;
+    }
+    if (y + 150 > window.innerHeight) {
+      y = window.innerHeight - 160;
+    }
+
+    setContextMenuPos({ x, y });
+  };
+
+  const closeMenu = () => setContextMenuId(null);
+
+  const handleCopy = (itemId: string) => {
+    setCopiedItemId(itemId);
+    closeMenu();
+  };
+
+  const handlePaste = () => {
+    const copiedId = copiedItemId();
+    if (!copiedId) return;
+
+    const copiedNode = findNode(FILE_TREE, copiedId);
+    if (!copiedNode) return;
+
+    const targetFolder = findNode(FILE_TREE, currentFolderId());
+    if (!targetFolder || targetFolder.type !== "folder") return;
+
+    // Create a copy of the node
+    const newNode: FileNode = {
+      ...copiedNode,
+      id: `${copiedNode.id}-copy-${Date.now()}`,
+      name: `${copiedNode.name}${copiedNode.type === "folder" ? "-copy" : ""}`,
+    };
+
+    if (!targetFolder.children) {
+      targetFolder.children = [];
+    }
+    targetFolder.children.push(newNode);
+    closeMenu();
+  };
+
+  const handleDelete = (itemId: string) => {
+    const targetFolder = findNode(FILE_TREE, currentFolderId());
+    if (!targetFolder || !targetFolder.children) return;
+
+    const index = targetFolder.children.findIndex((child) => child.id === itemId);
+    if (index !== -1) {
+      targetFolder.children.splice(index, 1);
+    }
+    closeMenu();
   };
 
   const handleFileDoubleClick = (file: FileNode) => {
@@ -255,6 +318,7 @@ export default function FileExplorer(props: FileExplorerProps) {
                 <button
                   type="button"
                   onClick={() => setCurrentFolderId(folder.id)}
+                  onContextMenu={(e) => handleContextMenu(e, folder.id)}
                   style={{
                     border: "1px solid rgba(255,255,255,0.12)",
                     background: "rgba(255,255,255,0.03)",
@@ -279,6 +343,7 @@ export default function FileExplorer(props: FileExplorerProps) {
                 <button
                   type="button"
                   onDblClick={() => handleFileDoubleClick(file)}
+                  onContextMenu={(e) => handleContextMenu(e, file.id)}
                   style={{
                     border: "1px solid rgba(255,255,255,0.12)",
                     background: "rgba(255,255,255,0.03)",
@@ -316,6 +381,160 @@ export default function FileExplorer(props: FileExplorerProps) {
             )}
           </div>
         </section>
+
+        <Show when={contextMenuId() !== null}>
+          <div
+            onClick={closeMenu}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              "z-index": 998,
+            }}
+          />
+          <div
+            style={{
+              position: "fixed",
+              top: contextMenuPos().y + "px",
+              left: contextMenuPos().x + "px",
+              "z-index": 999,
+              background: "rgba(20, 20, 30, 0.95)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              "border-radius": "8px",
+              "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+              "backdrop-filter": "blur(8px)",
+              "min-width": "160px",
+              padding: "4px 0",
+            }}
+          >
+            <Show when={contextMenuId() !== null}>
+              {(() => {
+                const node = findNode(FILE_TREE, contextMenuId()!);
+                return (
+                  <>
+                    {node?.type === "file" && isTextFile(node.name) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (node.type === "file" && isTextFile(node.name)) {
+                            const previewContent =
+                              node.content ?? `${node.name}\n\nNo preview content available.`;
+                            props.onOpenTextEditor?.(node.name, previewContent);
+                          }
+                          closeMenu();
+                        }}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          padding: "8px 16px",
+                          background: "transparent",
+                          border: "none",
+                          color: "#e5e6ff",
+                          "text-align": "left",
+                          cursor: "pointer",
+                          "font-size": "0.9rem",
+                          transition: "background 0.1s",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.background = "rgba(255, 255, 255, 0.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.background = "transparent";
+                        }}
+                      >
+                        📖 Open
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleCopy(contextMenuId()!);
+                      }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px 16px",
+                        background: "transparent",
+                        border: "none",
+                        color: "#e5e6ff",
+                        "text-align": "left",
+                        cursor: "pointer",
+                        "font-size": "0.9rem",
+                        transition: "background 0.1s",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255, 255, 255, 0.1)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
+                    >
+                      📋 Copy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handlePaste();
+                      }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px 16px",
+                        background: "transparent",
+                        border: "none",
+                        color: copiedItemId() ? "#e5e6ff" : "#7a7a8f",
+                        "text-align": "left",
+                        cursor: copiedItemId() ? "pointer" : "not-allowed",
+                        "font-size": "0.9rem",
+                        transition: "background 0.1s",
+                        opacity: copiedItemId() ? "1" : "0.5",
+                      }}
+                      disabled={!copiedItemId()}
+                      onMouseEnter={(e) => {
+                        if (copiedItemId()) {
+                          (e.currentTarget as HTMLElement).style.background = "rgba(255, 255, 255, 0.1)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
+                    >
+                      📌 Paste
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleDelete(contextMenuId()!);
+                      }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px 16px",
+                        background: "transparent",
+                        border: "none",
+                        color: "#ff6b6b",
+                        "text-align": "left",
+                        cursor: "pointer",
+                        "font-size": "0.9rem",
+                        transition: "background 0.1s",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255, 107, 107, 0.2)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
+                    >
+                      🗑️ Delete
+                    </button>
+                  </>
+                );
+              })()}
+            </Show>
+          </div>
+        </Show>
       </div>
     </Windows>
   );
