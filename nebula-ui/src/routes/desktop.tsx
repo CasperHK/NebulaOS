@@ -65,7 +65,13 @@ type FileNode = {
   children?: FileNode[];
 };
 
-type WindowId = "store" | "explorer" | "control-panel";
+type WindowId = "store" | "explorer" | "control-panel" | "ai-terminal";
+
+type AIMessage = {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+};
 
 const FILE_TREE: FileNode = {
   id: "root",
@@ -139,9 +145,11 @@ export default function Desktop() {
   const [isStoreOpen, setIsStoreOpen] = createSignal(false);
   const [isExplorerOpen, setIsExplorerOpen] = createSignal(false);
   const [isControlPanelOpen, setIsControlPanelOpen] = createSignal(false);
+  const [isAITerminalOpen, setIsAITerminalOpen] = createSignal(false);
   const [isStoreMinimized, setIsStoreMinimized] = createSignal(false);
   const [isExplorerMinimized, setIsExplorerMinimized] = createSignal(false);
   const [isControlPanelMinimized, setIsControlPanelMinimized] = createSignal(false);
+  const [isAITerminalMinimized, setIsAITerminalMinimized] = createSignal(false);
   const [activeControlTab, setActiveControlTab] = createSignal<"appearance" | "system" | "about">("appearance");
   const [selectedTheme, setSelectedTheme] = createSignal("Nebula Dark");
   const [selectedWallpaper, setSelectedWallpaper] = createSignal("Deep Space");
@@ -150,7 +158,179 @@ export default function Desktop() {
   const [searchText, setSearchText] = createSignal("");
   const [installedAppIds, setInstalledAppIds] = createSignal<string[]>([]);
   const [currentFolderId, setCurrentFolderId] = createSignal("root");
-  const [windowStack, setWindowStack] = createSignal<WindowId[]>(["store", "explorer", "control-panel"]);
+  const [windowStack, setWindowStack] = createSignal<WindowId[]>(["store", "explorer", "control-panel", "ai-terminal"]);
+  const [aiPrompt, setAiPrompt] = createSignal("");
+  const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      text:
+        "AI Terminal ready. I can control NebulaOS apps inside this desktop only. Try: open app store, minimize explorer, close control panel, focus ai terminal, show time, help.",
+    },
+  ]);
+
+  const appendAIMessage = (role: AIMessage["role"], text: string) => {
+    setAiMessages((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        role,
+        text,
+      },
+    ]);
+  };
+
+  const resolveTargetApp = (raw: string): WindowId | null => {
+    const key = raw.trim().toLowerCase();
+    if (["app store", "store", "market"].includes(key)) return "store";
+    if (["file explorer", "explorer", "files"].includes(key)) return "explorer";
+    if (["control panel", "settings", "control"].includes(key)) return "control-panel";
+    if (["ai terminal", "terminal", "ai"].includes(key)) return "ai-terminal";
+    return null;
+  };
+
+  const appLabel = (target: WindowId) => {
+    if (target === "store") return "App Store";
+    if (target === "explorer") return "File Explorer";
+    if (target === "control-panel") return "Control Panel";
+    return "AI Terminal";
+  };
+
+  const openAppWindow = (target: WindowId) => {
+    if (target === "store") {
+      setIsStoreOpen(true);
+      setIsStoreMinimized(false);
+    }
+
+    if (target === "explorer") {
+      setIsExplorerOpen(true);
+      setIsExplorerMinimized(false);
+      setCurrentFolderId("root");
+    }
+
+    if (target === "control-panel") {
+      setIsControlPanelOpen(true);
+      setIsControlPanelMinimized(false);
+      setActiveControlTab("appearance");
+    }
+
+    if (target === "ai-terminal") {
+      setIsAITerminalOpen(true);
+      setIsAITerminalMinimized(false);
+    }
+
+    bringWindowToFront(target);
+  };
+
+  const minimizeAppWindow = (target: WindowId) => {
+    if (target === "store") setIsStoreMinimized(true);
+    if (target === "explorer") setIsExplorerMinimized(true);
+    if (target === "control-panel") setIsControlPanelMinimized(true);
+    if (target === "ai-terminal") setIsAITerminalMinimized(true);
+  };
+
+  const closeAppWindow = (target: WindowId) => {
+    if (target === "store") {
+      setIsStoreOpen(false);
+      setIsStoreMinimized(false);
+    }
+
+    if (target === "explorer") {
+      setIsExplorerOpen(false);
+      setIsExplorerMinimized(false);
+    }
+
+    if (target === "control-panel") {
+      setIsControlPanelOpen(false);
+      setIsControlPanelMinimized(false);
+    }
+
+    if (target === "ai-terminal") {
+      setIsAITerminalOpen(false);
+      setIsAITerminalMinimized(false);
+    }
+  };
+
+  const runAITerminalCommand = (input: string) => {
+    const query = input.trim();
+    if (!query) return;
+
+    appendAIMessage("user", query);
+
+    const lowered = query.toLowerCase();
+
+    if (
+      /(shutdown|reboot|restart pc|delete|format|powershell|cmd|registry|install|uninstall|open chrome|open notepad|task manager|system32)/i.test(lowered)
+    ) {
+      appendAIMessage(
+        "assistant",
+        "Blocked: AI Terminal is sandboxed to NebulaOS app controls only. I cannot execute real OS/system commands.",
+      );
+      return;
+    }
+
+    if (/^help$|^commands$|what can you do|capabilities/.test(lowered)) {
+      appendAIMessage(
+        "assistant",
+        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal.",
+      );
+      return;
+    }
+
+    if (/(show|what is|current)\s+time/.test(lowered)) {
+      appendAIMessage("assistant", `Current desktop time: ${timeText()}.`);
+      return;
+    }
+
+    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai)/);
+
+    if (actionMatch) {
+      const action = actionMatch[1];
+      const target = resolveTargetApp(actionMatch[2]);
+
+      if (!target) {
+        appendAIMessage("assistant", "I could not resolve that app target.");
+        return;
+      }
+
+      if (action === "open" || action === "launch" || action === "start" || action === "show") {
+        openAppWindow(target);
+        appendAIMessage("assistant", `${appLabel(target)} opened.`);
+        return;
+      }
+
+      if (action === "focus") {
+        openAppWindow(target);
+        appendAIMessage("assistant", `${appLabel(target)} focused.`);
+        return;
+      }
+
+      if (action === "minimize") {
+        minimizeAppWindow(target);
+        appendAIMessage("assistant", `${appLabel(target)} minimized to dock.`);
+        return;
+      }
+
+      if (action === "close") {
+        closeAppWindow(target);
+        appendAIMessage("assistant", `${appLabel(target)} closed.`);
+        return;
+      }
+    }
+
+    appendAIMessage(
+      "assistant",
+      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, show time, help.",
+    );
+  };
+
+  const submitAIPrompt = () => {
+    const prompt = aiPrompt().trim();
+    if (!prompt) return;
+
+    setAiPrompt("");
+    runAITerminalCommand(prompt);
+  };
 
   const bringWindowToFront = (windowId: WindowId) => {
     setWindowStack((prev) => [...prev.filter((id) => id !== windowId), windowId]);
@@ -350,6 +530,43 @@ export default function Desktop() {
             ⚙
           </span>
           <span style={{ "font-size": "0.82rem" }}>Control Panel</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => openAppWindow("ai-terminal")}
+          style={{
+            position: "absolute",
+            top: "18.5rem",
+            left: "1.25rem",
+            border: "none",
+            background: "transparent",
+            display: "flex",
+            "flex-direction": "column",
+            "align-items": "center",
+            gap: "0.4rem",
+            color: "#d6d6ff",
+            cursor: "pointer",
+            width: "84px",
+          }}
+          aria-label="Open AI Terminal"
+          title="AI Terminal"
+        >
+          <span
+            style={{
+              width: "56px",
+              height: "56px",
+              "border-radius": "14px",
+              background: "linear-gradient(135deg, #62d2ff, #5f72ff)",
+              display: "grid",
+              "place-items": "center",
+              "box-shadow": "0 8px 24px rgba(98,210,255,0.35)",
+              "font-size": "1.45rem",
+            }}
+          >
+            🤖
+          </span>
+          <span style={{ "font-size": "0.82rem" }}>AI Terminal</span>
         </button>
 
         <div style={{ margin: "auto", "text-align": "center" }}>
@@ -850,6 +1067,128 @@ export default function Desktop() {
             </div>
           </Windows>
         )}
+
+        {isAITerminalOpen() && !isAITerminalMinimized() && (
+          <Windows
+            title="Nebula AI Terminal"
+            icon="🤖"
+            onClose={() => {
+              setIsAITerminalOpen(false);
+              setIsAITerminalMinimized(false);
+            }}
+            onMinimize={() => setIsAITerminalMinimized(true)}
+            onFocus={() => bringWindowToFront("ai-terminal")}
+            zIndex={getWindowZIndex("ai-terminal")}
+            top="49%"
+            left="54%"
+            width="min(900px, 95vw)"
+            height="min(600px, 84vh)"
+            background="rgba(7,14,30,0.95)"
+          >
+            <div style={{ display: "flex", "flex-direction": "column", height: "100%" }}>
+              <div
+                style={{
+                  padding: "0.75rem 1rem",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  "border-left": "none",
+                  "border-right": "none",
+                  "border-top": "none",
+                  color: "#9db3da",
+                  "font-size": "0.8rem",
+                }}
+              >
+                Sandbox mode: This assistant can control only NebulaOS windows in this desktop session.
+              </div>
+
+              <div
+                style={{
+                  flex: "1",
+                  overflow: "auto",
+                  padding: "0.9rem 1rem",
+                  display: "grid",
+                  gap: "0.65rem",
+                  "align-content": "start",
+                }}
+              >
+                <For each={aiMessages()}>
+                  {(message) => (
+                    <div
+                      style={{
+                        padding: "0.62rem 0.75rem",
+                        "border-radius": "10px",
+                        border:
+                          message.role === "assistant"
+                            ? "1px solid rgba(98,210,255,0.28)"
+                            : "1px solid rgba(255,255,255,0.14)",
+                        background:
+                          message.role === "assistant"
+                            ? "rgba(98,210,255,0.1)"
+                            : "rgba(255,255,255,0.05)",
+                        color: message.role === "assistant" ? "#d8f1ff" : "#e9ebff",
+                        "font-size": "0.84rem",
+                        "line-height": "1.45",
+                      }}
+                    >
+                      <strong style={{ "font-size": "0.74rem", color: "#95a7d4" }}>
+                        {message.role === "assistant" ? "AI" : "You"}
+                      </strong>
+                      <p style={{ margin: "0.25rem 0 0" }}>{message.text}</p>
+                    </div>
+                  )}
+                </For>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.55rem",
+                  padding: "0.85rem 1rem",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  "border-left": "none",
+                  "border-right": "none",
+                  "border-bottom": "none",
+                }}
+              >
+                <input
+                  type="text"
+                  value={aiPrompt()}
+                  onInput={(event) => setAiPrompt(event.currentTarget.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      submitAIPrompt();
+                    }
+                  }}
+                  placeholder="Type command: open app store"
+                  style={{
+                    flex: "1",
+                    padding: "0.72rem 0.85rem",
+                    "border-radius": "10px",
+                    border: "1px solid rgba(255,255,255,0.16)",
+                    background: "rgba(255,255,255,0.05)",
+                    color: "#eff3ff",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={submitAIPrompt}
+                  style={{
+                    border: "none",
+                    background: "linear-gradient(135deg, #62d2ff, #5f72ff)",
+                    color: "#0b1328",
+                    "border-radius": "10px",
+                    padding: "0.7rem 0.9rem",
+                    "font-weight": "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </Windows>
+        )}
       </main>
 
       {/* Taskbar */}
@@ -945,6 +1284,29 @@ export default function Desktop() {
               aria-label="Restore Control Panel"
             >
               ⚙
+            </button>
+          )}
+          {isAITerminalOpen() && (
+            <button
+              type="button"
+              onClick={() => {
+                setIsAITerminalMinimized(false);
+                bringWindowToFront("ai-terminal");
+              }}
+              style={{
+                border: "1px solid rgba(255,255,255,0.18)",
+                background: "rgba(255,255,255,0.08)",
+                color: "#e5e6ff",
+                "border-radius": "10px",
+                width: "34px",
+                height: "30px",
+                cursor: "pointer",
+                "font-size": "1rem",
+              }}
+              title="Restore AI Terminal"
+              aria-label="Restore AI Terminal"
+            >
+              🤖
             </button>
           )}
         </div>

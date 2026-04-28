@@ -18,8 +18,13 @@ type WindowsProps = {
 
 export default function Windows(props: WindowsProps) {
 	const ANIMATION_MS = 220;
+	const MIN_WIDTH = 420;
+	const MIN_HEIGHT = 280;
 	const [position, setPosition] = createSignal<{ x: number; y: number } | null>(null);
+	const [size, setSize] = createSignal<{ width: number; height: number } | null>(null);
 	const [isMaximized, setIsMaximized] = createSignal(false);
+	const [isDragging, setIsDragging] = createSignal(false);
+	const [isResizing, setIsResizing] = createSignal(false);
 	const [isVisible, setIsVisible] = createSignal(false);
 	const [isClosing, setIsClosing] = createSignal(false);
 	const [isMinimizing, setIsMinimizing] = createSignal(false);
@@ -29,6 +34,8 @@ export default function Windows(props: WindowsProps) {
 
 	let dragMoveListener: ((event: PointerEvent) => void) | null = null;
 	let dragEndListener: ((event: PointerEvent) => void) | null = null;
+	let resizeMoveListener: ((event: PointerEvent) => void) | null = null;
+	let resizeEndListener: ((event: PointerEvent) => void) | null = null;
 
 	const clearDragListeners = () => {
 		if (dragMoveListener) {
@@ -41,10 +48,28 @@ export default function Windows(props: WindowsProps) {
 			window.removeEventListener("pointercancel", dragEndListener);
 			dragEndListener = null;
 		}
+
+		setIsDragging(false);
+	};
+
+	const clearResizeListeners = () => {
+		if (resizeMoveListener) {
+			window.removeEventListener("pointermove", resizeMoveListener);
+			resizeMoveListener = null;
+		}
+
+		if (resizeEndListener) {
+			window.removeEventListener("pointerup", resizeEndListener);
+			window.removeEventListener("pointercancel", resizeEndListener);
+			resizeEndListener = null;
+		}
+
+		setIsResizing(false);
 	};
 
 	onCleanup(() => {
 		clearDragListeners();
+		clearResizeListeners();
 
 		if (closeTimer !== null) {
 			window.clearTimeout(closeTimer);
@@ -82,10 +107,15 @@ export default function Windows(props: WindowsProps) {
 		}
 
 		const rect = sectionRef.getBoundingClientRect();
+		setPosition({ x: rect.left, y: rect.top });
+		setSize({ width: rect.width, height: rect.height });
 		const pointerOffsetX = event.clientX - rect.left;
 		const pointerOffsetY = event.clientY - rect.top;
 
 		clearDragListeners();
+		clearResizeListeners();
+		setIsDragging(true);
+		event.preventDefault();
 
 		dragMoveListener = (moveEvent: PointerEvent) => {
 			setPosition({
@@ -101,6 +131,72 @@ export default function Windows(props: WindowsProps) {
 		window.addEventListener("pointermove", dragMoveListener);
 		window.addEventListener("pointerup", dragEndListener);
 		window.addEventListener("pointercancel", dragEndListener);
+	};
+
+	const handleResizePointerDown = (
+		event: PointerEvent,
+		edges: { top?: boolean; right?: boolean; bottom?: boolean; left?: boolean },
+	) => {
+		props.onFocus?.();
+
+		if (!sectionRef || isMaximized() || isClosing() || isMinimizing()) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		const startRect = sectionRef.getBoundingClientRect();
+		const startX = event.clientX;
+		const startY = event.clientY;
+
+		setPosition({ x: startRect.left, y: startRect.top });
+		setSize({ width: startRect.width, height: startRect.height });
+
+		clearDragListeners();
+		clearResizeListeners();
+		setIsResizing(true);
+
+		resizeMoveListener = (moveEvent: PointerEvent) => {
+			const deltaX = moveEvent.clientX - startX;
+			const deltaY = moveEvent.clientY - startY;
+
+			let nextX = startRect.left;
+			let nextY = startRect.top;
+			let nextWidth = startRect.width;
+			let nextHeight = startRect.height;
+
+			if (edges.right) {
+				nextWidth = Math.max(MIN_WIDTH, startRect.width + deltaX);
+			}
+
+			if (edges.bottom) {
+				nextHeight = Math.max(MIN_HEIGHT, startRect.height + deltaY);
+			}
+
+			if (edges.left) {
+				const rawWidth = startRect.width - deltaX;
+				nextWidth = Math.max(MIN_WIDTH, rawWidth);
+				nextX = startRect.right - nextWidth;
+			}
+
+			if (edges.top) {
+				const rawHeight = startRect.height - deltaY;
+				nextHeight = Math.max(MIN_HEIGHT, rawHeight);
+				nextY = startRect.bottom - nextHeight;
+			}
+
+			setPosition({ x: nextX, y: nextY });
+			setSize({ width: nextWidth, height: nextHeight });
+		};
+
+		resizeEndListener = () => {
+			clearResizeListeners();
+		};
+
+		window.addEventListener("pointermove", resizeMoveListener);
+		window.addEventListener("pointerup", resizeEndListener);
+		window.addEventListener("pointercancel", resizeEndListener);
 	};
 
 	const startExitAnimation = (type: "close" | "minimize") => {
@@ -137,6 +233,26 @@ export default function Windows(props: WindowsProps) {
 		setIsMaximized((value) => !value);
 	};
 
+	const getWindowTransform = () => {
+		const transforms: string[] = [];
+
+		if (!isMaximized() && !position()) {
+			transforms.push("translate(-50%, -50%)");
+		}
+
+		if (!isVisible()) {
+			if (isMinimizing()) {
+				transforms.push("translateY(18px)", "scale(0.92)");
+			} else {
+				transforms.push("scale(0.94)");
+			}
+		} else {
+			transforms.push("scale(1)");
+		}
+
+		return transforms.join(" ");
+	};
+
 	return (
 		<section
 			ref={sectionRef}
@@ -145,12 +261,16 @@ export default function Windows(props: WindowsProps) {
 				position: "absolute",
 				top: isMaximized() ? "0" : position() ? `${position()!.y}px` : props.top ?? "50%",
 				left: isMaximized() ? "0" : position() ? `${position()!.x}px` : props.left ?? "50%",
-				transform: `${isMaximized() ? "none" : position() ? "none" : "translate(-50%, -50%)"} ${
-					isVisible() ? "scale(1)" : isMinimizing() ? "translateY(18px) scale(0.92)" : "scale(0.94)"
-				}`,
-				width: isMaximized() ? "100%" : props.width ?? "min(900px, 95vw)",
+				transform: getWindowTransform(),
+				width: isMaximized()
+					? "100%"
+					: size()
+						? `${size()!.width}px`
+						: props.width ?? "min(900px, 95vw)",
 				height: isMaximized()
-						? "100%"
+					? "100%"
+					: size()
+						? `${size()!.height}px`
 						: props.height ?? "min(600px, 84vh)",
 				background: props.background ?? "rgba(10,12,32,0.92)",
 				"z-index": props.zIndex?.toString() ?? "10",
@@ -158,8 +278,9 @@ export default function Windows(props: WindowsProps) {
 				"border-radius": isMaximized() ? "0" : "16px",
 				"backdrop-filter": "blur(18px)",
 				"box-shadow": "0 24px 70px rgba(0,0,0,0.45)",
-				transition:
-					"top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, transform 220ms ease, border-radius 220ms ease, opacity 220ms ease",
+				transition: isDragging() || isResizing()
+					? "opacity 120ms linear"
+					: "top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, transform 220ms ease, border-radius 220ms ease, opacity 220ms ease",
 				display: "flex",
 				"flex-direction": "column",
 				overflow: "hidden",
@@ -240,6 +361,107 @@ export default function Windows(props: WindowsProps) {
 			</header>
 
 			{props.children}
+
+			{!isMaximized() && (
+				<>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { top: true })}
+						style={{
+							position: "absolute",
+							top: "-4px",
+							left: "8px",
+							right: "8px",
+							height: "8px",
+							cursor: "ns-resize",
+							"z-index": "2",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { right: true })}
+						style={{
+							position: "absolute",
+							top: "8px",
+							right: "-4px",
+							bottom: "8px",
+							width: "8px",
+							cursor: "ew-resize",
+							"z-index": "2",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { bottom: true })}
+						style={{
+							position: "absolute",
+							left: "8px",
+							right: "8px",
+							bottom: "-4px",
+							height: "8px",
+							cursor: "ns-resize",
+							"z-index": "2",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { left: true })}
+						style={{
+							position: "absolute",
+							top: "8px",
+							left: "-4px",
+							bottom: "8px",
+							width: "8px",
+							cursor: "ew-resize",
+							"z-index": "2",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { top: true, left: true })}
+						style={{
+							position: "absolute",
+							top: "-5px",
+							left: "-5px",
+							width: "11px",
+							height: "11px",
+							cursor: "nwse-resize",
+							"z-index": "3",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { top: true, right: true })}
+						style={{
+							position: "absolute",
+							top: "-5px",
+							right: "-5px",
+							width: "11px",
+							height: "11px",
+							cursor: "nesw-resize",
+							"z-index": "3",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { bottom: true, right: true })}
+						style={{
+							position: "absolute",
+							bottom: "-5px",
+							right: "-5px",
+							width: "11px",
+							height: "11px",
+							cursor: "nwse-resize",
+							"z-index": "3",
+						}}
+					/>
+					<div
+						onPointerDown={(event) => handleResizePointerDown(event, { bottom: true, left: true })}
+						style={{
+							position: "absolute",
+							bottom: "-5px",
+							left: "-5px",
+							width: "11px",
+							height: "11px",
+							cursor: "nesw-resize",
+							"z-index": "3",
+						}}
+					/>
+				</>
+			)}
 		</section>
 	);
 }
