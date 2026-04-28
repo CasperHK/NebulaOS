@@ -1,5 +1,9 @@
 import { A } from "@solidjs/router";
 
+export const route = {
+  ssr: false,
+};
+
 export default function Home() {
   return (
     <main

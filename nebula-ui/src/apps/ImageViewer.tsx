@@ -184,6 +184,10 @@ export default function ImageViewer(props: ImageViewerProps) {
 
 				<div
 					onWheel={handleWheel}
+					onMouseDown={handleMouseDown}
+					onMouseMove={handleMouseMove}
+					onMouseUp={handleMouseUp}
+					onMouseLeave={handleMouseUp}
 					style={{
 						flex: "1",
 						background: "rgba(2,5,16,0.88)",
@@ -191,7 +195,8 @@ export default function ImageViewer(props: ImageViewerProps) {
 						"place-items": "center",
 						padding: "0.8rem",
 						overflow: "hidden",
-						cursor: zoom() !== 1 ? "grab" : "default",
+						cursor: zoom() !== 1 ? (isDragging() ? "grabbing" : "grab") : "default",
+						"user-select": "none",
 					}}
 				>
 					<img
@@ -202,9 +207,9 @@ export default function ImageViewer(props: ImageViewerProps) {
 							height: "100%",
 							"object-fit": fitContain() ? "contain" : "cover",
 							"border-radius": "10px",
-							transform: `scale(${zoom()})`,
+							transform: `translate(${offsetX()}px, ${offsetY()}px) scale(${zoom()})`,
 							"transform-origin": "center",
-							transition: "transform 0.1s ease",
+							transition: isDragging() ? "none" : "transform 0.1s ease",
 							"pointer-events": "none",
 						}}
 					/>

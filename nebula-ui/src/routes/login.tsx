@@ -1,6 +1,10 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
+export const route = {
+  ssr: false,
+};
+
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = createSignal("");
