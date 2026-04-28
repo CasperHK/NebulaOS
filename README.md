@@ -45,7 +45,7 @@ npm run dev
 打開瀏覽器訪問 http://localhost:3000。
 ------------------------------
 ## 📂 項目目錄
-
+```text
 ├── src/
 │   ├── components/       # OS 組件 (Taskbar, Desktop, Window)
 │   ├── apps/             # 內建應用 (Editor, Terminal, File Explorer)
@@ -54,6 +54,7 @@ npm run dev
 │   └── stores/           # 全局狀態 (User Session, System Config)
 ├── public/               # 靜態資源與圖標
 └── package.json
+```
 
 ------------------------------
 ## 🗺️ 開發路線圖 (Roadmap)
