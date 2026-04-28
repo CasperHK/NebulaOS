@@ -24,16 +24,8 @@ export default function Desktop() {
   const [isTaskManagerOpen, setIsTaskManagerOpen] = createSignal(false);
   const [isTaskManagerMinimized, setIsTaskManagerMinimized] = createSignal(false);
   const [usagePulse, setUsagePulse] = createSignal(0);
-  const [activeControlTab, setActiveControlTab] = createSignal<"appearance" | "system" | "about">("appearance");
-  const [selectedTheme, setSelectedTheme] = createSignal("Nebula Dark");
-  const [selectedWallpaper, setSelectedWallpaper] = createSignal("Deep Space");
-  const [selectedLanguage, setSelectedLanguage] = createSignal("English");
-  const [selectedTimeFormat, setSelectedTimeFormat] = createSignal("24-hour");
-  const [searchText, setSearchText] = createSignal("");
   const [installedAppIds, setInstalledAppIds] = createSignal<string[]>([]);
-  const [currentFolderId, setCurrentFolderId] = createSignal("root");
   const [windowStack, setWindowStack] = createSignal<WindowId[]>(["store", "explorer", "control-panel", "ai-terminal", "task-manager"]);
-  const [aiPrompt, setAiPrompt] = createSignal("");
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
       id: "welcome",
@@ -81,13 +73,11 @@ export default function Desktop() {
     if (target === "explorer") {
       setIsExplorerOpen(true);
       setIsExplorerMinimized(false);
-      setCurrentFolderId("root");
     }
 
     if (target === "control-panel") {
       setIsControlPanelOpen(true);
       setIsControlPanelMinimized(false);
-      setActiveControlTab("appearance");
     }
 
     if (target === "ai-terminal") {
@@ -211,14 +201,6 @@ export default function Desktop() {
     );
   };
 
-  const submitAIPrompt = () => {
-    const prompt = aiPrompt().trim();
-    if (!prompt) return;
-
-    setAiPrompt("");
-    runAITerminalCommand(prompt);
-  };
-
   const bringWindowToFront = (windowId: WindowId) => {
     setWindowStack((prev) => [...prev.filter((id) => id !== windowId), windowId]);
   };
@@ -228,44 +210,9 @@ export default function Desktop() {
     return stackIndex === -1 ? 10 : 20 + stackIndex;
   };
 
-  const visibleApps = createMemo(() => {
-    const keyword = searchText().trim().toLowerCase();
-    if (!keyword) return STORE_APPS;
-
-    return STORE_APPS.filter(
-      (app) =>
-        app.name.toLowerCase().includes(keyword) ||
-        app.category.toLowerCase().includes(keyword) ||
-        app.description.toLowerCase().includes(keyword),
-    );
-  });
-
   const installApp = (id: string) => {
     setInstalledAppIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
   };
-
-  const resetControlSettings = () => {
-    setSelectedTheme("Nebula Dark");
-    setSelectedWallpaper("Deep Space");
-    setSelectedLanguage("English");
-    setSelectedTimeFormat("24-hour");
-  };
-
-  const currentFolder = createMemo(() => {
-    const folder = findNode(FILE_TREE, currentFolderId());
-    if (folder && folder.type === "folder") return folder;
-    return FILE_TREE;
-  });
-
-  const currentPath = createMemo(() => findPath(FILE_TREE, currentFolderId()) ?? [FILE_TREE]);
-
-  const folderItems = createMemo(() =>
-    (currentFolder().children ?? []).filter((item) => item.type === "folder"),
-  );
-
-  const fileItems = createMemo(() =>
-    (currentFolder().children ?? []).filter((item) => item.type === "file"),
-  );
 
   const runtimeRows = createMemo<AppRuntimeRow[]>(() => {
     // usagePulse() is read to make this reactive on each tick
@@ -543,478 +490,32 @@ export default function Desktop() {
           </p>
         </div>
 
-        {isStoreOpen() && !isStoreMinimized() && (
-          <Windows
-            title="Nebula App Store"
-            icon="🛍"
-            onClose={() => {
-              setIsStoreOpen(false);
-              setIsStoreMinimized(false);
-            }}
-            onMinimize={() => setIsStoreMinimized(true)}
-            onFocus={() => bringWindowToFront("store")}
-            zIndex={getWindowZIndex("store")}
-            width="min(920px, 95vw)"
-            height="min(610px, 84vh)"
-            background="rgba(10,12,32,0.92)"
-          >
-            <div style={{ padding: "1rem" }}>
-              <input
-                type="text"
-                value={searchText()}
-                onInput={(e) => setSearchText(e.currentTarget.value)}
-                placeholder="Search apps, categories, keywords..."
-                style={{
-                  width: "100%",
-                  padding: "0.72rem 0.85rem",
-                  "border-radius": "10px",
-                  border: "1px solid rgba(255,255,255,0.13)",
-                  background: "rgba(255,255,255,0.05)",
-                  color: "#ecedff",
-                  outline: "none",
-                }}
+            {isStoreOpen() && !isStoreMinimized() && (
+              <AppStore
+                onClose={() => closeAppWindow("store")}
+                onMinimize={() => minimizeAppWindow("store")}
+                onFocus={() => bringWindowToFront("store")}
+                zIndex={getWindowZIndex("store")}
+                installedAppIds={installedAppIds()}
+                onInstall={installApp}
               />
-            </div>
-
-            <div
-              style={{
-                padding: "0 1rem 1rem",
-                display: "grid",
-                "grid-template-columns": "repeat(auto-fill, minmax(220px, 1fr))",
-                gap: "0.85rem",
-                overflow: "auto",
-              }}
-            >
-              <For each={visibleApps()}>
-                {(app) => {
-                  const installed = () => installedAppIds().includes(app.id);
-
-                  return (
-                    <article
-                      style={{
-                        padding: "0.9rem",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        background: "rgba(255,255,255,0.03)",
-                        "border-radius": "12px",
-                        display: "flex",
-                        "flex-direction": "column",
-                        gap: "0.55rem",
-                      }}
-                    >
-                      <div style={{ display: "flex", "justify-content": "space-between", gap: "0.65rem" }}>
-                        <strong style={{ color: "#f1f1ff", "font-size": "0.95rem" }}>{app.name}</strong>
-                        <span style={{ color: "#b7b8da", "font-size": "0.8rem" }}>★ {app.rating.toFixed(1)}</span>
-                      </div>
-
-                      <span
-                        style={{
-                          width: "fit-content",
-                          padding: "0.16rem 0.45rem",
-                          "border-radius": "999px",
-                          background: "rgba(123,140,222,0.2)",
-                          color: "#c7d0ff",
-                          "font-size": "0.72rem",
-                        }}
-                      >
-                        {app.category}
-                      </span>
-
-                      <p style={{ color: "#aeb0cf", "font-size": "0.82rem", "line-height": "1.4" }}>
-                        {app.description}
-                      </p>
-
-                      <div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", "margin-top": "auto" }}>
-                        <span style={{ color: "#9396b8", "font-size": "0.77rem" }}>{app.size}</span>
-                        <button
-                          type="button"
-                          onClick={() => installApp(app.id)}
-                          disabled={installed()}
-                          style={{
-                            border: "none",
-                            background: installed()
-                              ? "rgba(70,170,110,0.35)"
-                              : "linear-gradient(135deg, #5f72ff, #8f7bff)",
-                            color: "#fff",
-                            "border-radius": "8px",
-                            padding: "0.42rem 0.62rem",
-                            "font-size": "0.78rem",
-                            cursor: installed() ? "default" : "pointer",
-                            opacity: installed() ? "0.75" : "1",
-                          }}
-                        >
-                          {installed() ? "Installed" : "Install"}
-                        </button>
-                      </div>
-                    </article>
-                  );
-                }}
-              </For>
-            </div>
-          </Windows>
-        )}
-
+            )}
         {isExplorerOpen() && !isExplorerMinimized() && (
-          <Windows
-            title="Nebula File Explorer"
-            icon="📁"
-            onClose={() => {
-              setIsExplorerOpen(false);
-              setIsExplorerMinimized(false);
-            }}
-            onMinimize={() => setIsExplorerMinimized(true)}
+          <FileExplorer
+            onClose={() => closeAppWindow("explorer")}
+            onMinimize={() => minimizeAppWindow("explorer")}
             onFocus={() => bringWindowToFront("explorer")}
             zIndex={getWindowZIndex("explorer")}
-            top="52%"
-            left="52%"
-            width="min(940px, 96vw)"
-            height="min(620px, 86vh)"
-            background="rgba(8,18,34,0.94)"
-          >
-            <div style={{ display: "flex", flex: "1", overflow: "hidden" }}>
-              <aside
-                style={{
-                  width: "220px",
-                  padding: "0.8rem",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  "border-top": "none",
-                  "border-bottom": "none",
-                  "border-left": "none",
-                  display: "flex",
-                  "flex-direction": "column",
-                  gap: "0.4rem",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setCurrentFolderId("root")}
-                  style={{
-                    border: "none",
-                    padding: "0.48rem 0.55rem",
-                    "border-radius": "8px",
-                    background: currentFolderId() === "root" ? "rgba(84,164,255,0.24)" : "transparent",
-                    color: "#d6ecff",
-                    cursor: "pointer",
-                    "text-align": "left",
-                  }}
-                >
-                  Home
-                </button>
-                <For each={FILE_TREE.children ?? []}>
-                  {(item) => (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentFolderId(item.id)}
-                      style={{
-                        border: "none",
-                        padding: "0.48rem 0.55rem",
-                        "border-radius": "8px",
-                        background: currentFolderId() === item.id ? "rgba(84,164,255,0.24)" : "transparent",
-                        color: "#d6ecff",
-                        cursor: "pointer",
-                        "text-align": "left",
-                      }}
-                    >
-                      {item.name}
-                    </button>
-                  )}
-                </For>
-              </aside>
-
-              <section style={{ flex: "1", display: "flex", "flex-direction": "column", overflow: "hidden" }}>
-                <div
-                  style={{
-                    padding: "0.72rem 0.9rem",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    "border-top": "none",
-                    "border-left": "none",
-                    "border-right": "none",
-                    display: "flex",
-                    "flex-wrap": "wrap",
-                    gap: "0.35rem",
-                  }}
-                >
-                  <For each={currentPath()}>
-                    {(segment, index) => (
-                      <button
-                        type="button"
-                        onClick={() => setCurrentFolderId(segment.id)}
-                        style={{
-                          border: "none",
-                          background: "rgba(255,255,255,0.08)",
-                          color: "#d4ebff",
-                          "border-radius": "999px",
-                          padding: "0.3rem 0.55rem",
-                          "font-size": "0.78rem",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {segment.name}{index() < currentPath().length - 1 ? " /" : ""}
-                      </button>
-                    )}
-                  </For>
-                </div>
-
-                <div style={{ padding: "0.9rem", overflow: "auto", display: "grid", gap: "0.55rem" }}>
-                  <For each={folderItems()}>
-                    {(folder) => (
-                      <button
-                        type="button"
-                        onClick={() => setCurrentFolderId(folder.id)}
-                        style={{
-                          border: "1px solid rgba(255,255,255,0.12)",
-                          background: "rgba(255,255,255,0.03)",
-                          "border-radius": "10px",
-                          padding: "0.65rem 0.75rem",
-                          display: "flex",
-                          "align-items": "center",
-                          "justify-content": "space-between",
-                          color: "#ecf6ff",
-                          cursor: "pointer",
-                        }}
-                        title={`Open ${folder.name}`}
-                      >
-                        <span>📁 {folder.name}</span>
-                        <span style={{ color: "#8eb8d8", "font-size": "0.78rem" }}>Folder</span>
-                      </button>
-                    )}
-                  </For>
-
-                  <For each={fileItems()}>
-                    {(file) => (
-                      <div
-                        style={{
-                          border: "1px solid rgba(255,255,255,0.12)",
-                          background: "rgba(255,255,255,0.03)",
-                          "border-radius": "10px",
-                          padding: "0.65rem 0.75rem",
-                          display: "flex",
-                          "align-items": "center",
-                          "justify-content": "space-between",
-                          color: "#ecf6ff",
-                        }}
-                      >
-                        <span>📄 {file.name}</span>
-                        <span style={{ color: "#8eb8d8", "font-size": "0.78rem" }}>{file.size ?? "-"}</span>
-                      </div>
-                    )}
-                  </For>
-
-                  {folderItems().length === 0 && fileItems().length === 0 && (
-                    <p style={{ color: "#7fa6c4", "font-size": "0.86rem" }}>This folder is empty.</p>
-                  )}
-                </div>
-              </section>
-            </div>
-          </Windows>
+          />
         )}
-
         {isControlPanelOpen() && !isControlPanelMinimized() && (
-          <Windows
-            title="Nebula Control Panel"
-            icon="⚙"
-            onClose={() => {
-              setIsControlPanelOpen(false);
-              setIsControlPanelMinimized(false);
-            }}
-            onMinimize={() => setIsControlPanelMinimized(true)}
+          <ControlPanel
+            onClose={() => closeAppWindow("control-panel")}
+            onMinimize={() => minimizeAppWindow("control-panel")}
             onFocus={() => bringWindowToFront("control-panel")}
             zIndex={getWindowZIndex("control-panel")}
-            width="min(860px, 95vw)"
-            height="min(590px, 84vh)"
-            background="rgba(10,12,32,0.93)"
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: "0.45rem",
-                padding: "0.9rem 1rem",
-                border: "1px solid rgba(255,255,255,0.08)",
-                "border-left": "none",
-                "border-right": "none",
-                "border-top": "none",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => setActiveControlTab("appearance")}
-                style={{
-                  border: "none",
-                  padding: "0.45rem 0.75rem",
-                  "border-radius": "8px",
-                  background: activeControlTab() === "appearance" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-                  color: "#dde0ff",
-                  cursor: "pointer",
-                  "font-size": "0.82rem",
-                }}
-              >
-                Appearance
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveControlTab("system")}
-                style={{
-                  border: "none",
-                  padding: "0.45rem 0.75rem",
-                  "border-radius": "8px",
-                  background: activeControlTab() === "system" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-                  color: "#dde0ff",
-                  cursor: "pointer",
-                  "font-size": "0.82rem",
-                }}
-              >
-                System
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveControlTab("about")}
-                style={{
-                  border: "none",
-                  padding: "0.45rem 0.75rem",
-                  "border-radius": "8px",
-                  background: activeControlTab() === "about" ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)",
-                  color: "#dde0ff",
-                  cursor: "pointer",
-                  "font-size": "0.82rem",
-                }}
-              >
-                About
-              </button>
-            </div>
-
-            <div style={{ padding: "1rem", overflow: "auto", display: "grid", gap: "1rem" }}>
-              {activeControlTab() === "appearance" && (
-                <>
-                  <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>Appearance</h3>
-                  <label style={{ display: "grid", gap: "0.35rem" }}>
-                    <span style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Theme</span>
-                    <select
-                      value={selectedTheme()}
-                      onChange={(e) => setSelectedTheme(e.currentTarget.value)}
-                      style={{
-                        padding: "0.6rem 0.7rem",
-                        "border-radius": "9px",
-                        border: "1px solid rgba(255,255,255,0.14)",
-                        background: "rgba(255,255,255,0.05)",
-                        color: "#edf0ff",
-                        outline: "none",
-                      }}
-                    >
-                      <option>Nebula Dark</option>
-                      <option>Oceanic Blue</option>
-                      <option>Aurora Glow</option>
-                    </select>
-                  </label>
-                  <label style={{ display: "grid", gap: "0.35rem" }}>
-                    <span style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Wallpaper</span>
-                    <select
-                      value={selectedWallpaper()}
-                      onChange={(e) => setSelectedWallpaper(e.currentTarget.value)}
-                      style={{
-                        padding: "0.6rem 0.7rem",
-                        "border-radius": "9px",
-                        border: "1px solid rgba(255,255,255,0.14)",
-                        background: "rgba(255,255,255,0.05)",
-                        color: "#edf0ff",
-                        outline: "none",
-                      }}
-                    >
-                      <option>Deep Space</option>
-                      <option>Gradient Blue</option>
-                      <option>Aurora Mist</option>
-                    </select>
-                  </label>
-                  <p style={{ color: "#9ea7cf", "font-size": "0.8rem" }}>
-                    Changes apply instantly and are kept for this session only.
-                  </p>
-                </>
-              )}
-
-              {activeControlTab() === "system" && (
-                <>
-                  <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>System</h3>
-                  <label style={{ display: "grid", gap: "0.35rem" }}>
-                    <span style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Language</span>
-                    <select
-                      value={selectedLanguage()}
-                      onChange={(e) => setSelectedLanguage(e.currentTarget.value)}
-                      style={{
-                        padding: "0.6rem 0.7rem",
-                        "border-radius": "9px",
-                        border: "1px solid rgba(255,255,255,0.14)",
-                        background: "rgba(255,255,255,0.05)",
-                        color: "#edf0ff",
-                        outline: "none",
-                      }}
-                    >
-                      <option>English</option>
-                      <option>Traditional Chinese</option>
-                    </select>
-                  </label>
-                  <label style={{ display: "grid", gap: "0.35rem" }}>
-                    <span style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Time Format</span>
-                    <select
-                      value={selectedTimeFormat()}
-                      onChange={(e) => setSelectedTimeFormat(e.currentTarget.value)}
-                      style={{
-                        padding: "0.6rem 0.7rem",
-                        "border-radius": "9px",
-                        border: "1px solid rgba(255,255,255,0.14)",
-                        background: "rgba(255,255,255,0.05)",
-                        color: "#edf0ff",
-                        outline: "none",
-                      }}
-                    >
-                      <option>24-hour</option>
-                      <option>12-hour</option>
-                    </select>
-                  </label>
-                  <div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", gap: "0.7rem" }}>
-                    <p style={{ color: "#9ea7cf", "font-size": "0.8rem" }}>
-                      Settings are temporary and will reset on refresh.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={resetControlSettings}
-                      style={{
-                        border: "1px solid rgba(255,255,255,0.2)",
-                        background: "rgba(255,255,255,0.08)",
-                        color: "#edf0ff",
-                        "border-radius": "8px",
-                        padding: "0.45rem 0.7rem",
-                        cursor: "pointer",
-                        "font-size": "0.78rem",
-                      }}
-                    >
-                      Reset to Defaults
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {activeControlTab() === "about" && (
-                <>
-                  <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>About</h3>
-                  <div
-                    style={{
-                      display: "grid",
-                      gap: "0.6rem",
-                      padding: "0.85rem",
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      "border-radius": "12px",
-                      background: "rgba(255,255,255,0.03)",
-                    }}
-                  >
-                    <p style={{ color: "#d9ddff", "font-size": "0.88rem" }}>Product: NebulaOS</p>
-                    <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>UI Module: nebula-ui</p>
-                    <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Version: 0.1.0-dev</p>
-                    <p style={{ color: "#aeb4d7", "font-size": "0.84rem" }}>Runtime: SolidStart Desktop Shell (Mock)</p>
-                  </div>
-                </>
-              )}
-            </div>
-          </Windows>
+          />
         )}
-
         {isAITerminalOpen() && !isAITerminalMinimized() && (
           <Windows
             title="Nebula AI Terminal"
