@@ -45,8 +45,8 @@ DATABASE_URL=your_db_url
 ```
 npm run dev
 ```
-
 打開瀏覽器訪問 http://localhost:3000。
+
 ------------------------------
 ## 📂 項目目錄
 ```text
