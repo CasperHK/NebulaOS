@@ -37,6 +37,10 @@ export default function Desktop() {
   const [isTaskManagerMinimized, setIsTaskManagerMinimized] = createSignal(false);
   const [isTextEditorOpen, setIsTextEditorOpen] = createSignal(false);
   const [isTextEditorMinimized, setIsTextEditorMinimized] = createSignal(false);
+  const [textEditorTitle, setTextEditorTitle] = createSignal("Untitled.txt");
+  const [textEditorContent, setTextEditorContent] = createSignal(
+    "# Nebula Notes\n\nWelcome to Text Editor.\n\n- This is an in-memory document.\n- Use New to start over.\n- Use Insert Sample to restore this text.\n",
+  );
   const [isImageViewerOpen, setIsImageViewerOpen] = createSignal(false);
   const [isImageViewerMinimized, setIsImageViewerMinimized] = createSignal(false);
   const [isMailOpen, setIsMailOpen] = createSignal(false);
@@ -709,6 +713,13 @@ export default function Desktop() {
               setIsImageViewerMinimized(false);
               bringWindowToFront("image-viewer");
             }}
+            onOpenTextEditor={(fileName, fileContent) => {
+              setTextEditorTitle(fileName);
+              setTextEditorContent(fileContent);
+              setIsTextEditorOpen(true);
+              setIsTextEditorMinimized(false);
+              bringWindowToFront("text-editor");
+            }}
           />
         )}
         {isControlPanelOpen() && !isControlPanelMinimized() && (
@@ -751,6 +762,8 @@ export default function Desktop() {
             onMinimize={() => minimizeAppWindow("text-editor")}
             onFocus={() => bringWindowToFront("text-editor")}
             zIndex={getWindowZIndex("text-editor")}
+            initialTitle={textEditorTitle()}
+            initialContent={textEditorContent()}
           />
         )}
 

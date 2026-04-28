@@ -1,4 +1,4 @@
-import { createMemo, createSignal } from "solid-js";
+import { createEffect, createMemo, createSignal } from "solid-js";
 import Windows from "../components/Windows";
 
 type TextEditorProps = {
@@ -6,13 +6,20 @@ type TextEditorProps = {
 	onMinimize: () => void;
 	onFocus: () => void;
 	zIndex: number;
+	initialTitle?: string;
+	initialContent?: string;
 };
 
 const SAMPLE_TEXT = `# Nebula Notes\n\nWelcome to Text Editor.\n\n- This is an in-memory document.\n- Use New to start over.\n- Use Insert Sample to restore this text.\n`;
 
 export default function TextEditor(props: TextEditorProps) {
-	const [title, setTitle] = createSignal("Untitled.txt");
-	const [content, setContent] = createSignal(SAMPLE_TEXT);
+	const [title, setTitle] = createSignal(props.initialTitle ?? "Untitled.txt");
+	const [content, setContent] = createSignal(props.initialContent ?? SAMPLE_TEXT);
+
+	createEffect(() => {
+		setTitle(props.initialTitle ?? "Untitled.txt");
+		setContent(props.initialContent ?? SAMPLE_TEXT);
+	});
 
 	const lineCount = createMemo(() => {
 		const text = content();

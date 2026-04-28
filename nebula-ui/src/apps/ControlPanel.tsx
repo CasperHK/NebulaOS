@@ -9,11 +9,20 @@ type ControlPanelProps = {
 };
 
 export default function ControlPanel(props: ControlPanelProps) {
-  const [activeTab, setActiveTab] = createSignal<"main" | "appearance" | "system" | "about" | "storage">("main");
+  const [activeTab, setActiveTab] = createSignal<"main" | "appearance" | "system" | "about" | "storage" | "default-apps">("main");
   const [selectedTheme, setSelectedTheme] = createSignal("Nebula Dark");
   const [selectedWallpaper, setSelectedWallpaper] = createSignal("Deep Space");
   const [selectedLanguage, setSelectedLanguage] = createSignal("English");
   const [selectedTimeFormat, setSelectedTimeFormat] = createSignal("24-hour");
+  const initialDefaultApps = {
+    ".txt": "Text Editor",
+    ".md": "Text Editor",
+    ".json": "Text Editor",
+    ".png": "Image Viewer",
+    ".jpg": "Image Viewer",
+    ".zip": "File Explorer",
+  } as const;
+  const [defaultApps, setDefaultApps] = createSignal<Record<string, string>>({ ...initialDefaultApps });
   const totalStorageGb = 256;
   const usedStorageGb = 93;
   const freeStorageGb = totalStorageGb - usedStorageGb;
@@ -25,6 +34,16 @@ export default function ControlPanel(props: ControlPanelProps) {
     setSelectedLanguage("English");
     setSelectedTimeFormat("24-hour");
   };
+
+  const updateDefaultApp = (fileType: string, appName: string) => {
+    setDefaultApps((prev) => ({ ...prev, [fileType]: appName }));
+  };
+
+  const resetDefaultApps = () => {
+    setDefaultApps({ ...initialDefaultApps });
+  };
+
+  const appOptions = ["Text Editor", "Image Viewer", "File Explorer", "AI Terminal"];
 
   return (
     <Windows
@@ -150,6 +169,26 @@ export default function ControlPanel(props: ControlPanelProps) {
                 <span style={{ "font-size": "1.35rem" }}>💾</span>
                 <strong style={{ "font-size": "0.9rem" }}>Storage</strong>
                 <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Used and free account space</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("default-apps")}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.04)",
+                  "border-radius": "12px",
+                  padding: "0.85rem",
+                  color: "#edf0ff",
+                  display: "grid",
+                  gap: "0.45rem",
+                  "justify-items": "start",
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ "font-size": "1.35rem" }}>🧩</span>
+                <strong style={{ "font-size": "0.9rem" }}>Default Apps</strong>
+                <span style={{ color: "#aeb4d7", "font-size": "0.78rem" }}>Choose app by file type</span>
               </button>
             </div>
           </>
@@ -369,6 +408,76 @@ export default function ControlPanel(props: ControlPanelProps) {
               <p style={{ color: "#9ea7cf", "font-size": "0.76rem" }}>
                 Upgrade storage plan when free space becomes limited.
               </p>
+            </div>
+          </>
+        )}
+
+        {activeTab() === "default-apps" && (
+          <>
+            <h3 style={{ color: "#edf0ff", "font-size": "1rem" }}>Default Apps</h3>
+            <p style={{ color: "#9ea7cf", "font-size": "0.8rem" }}>
+              Set which app opens when a file type is opened from File Explorer.
+            </p>
+
+            <div
+              style={{
+                display: "grid",
+                gap: "0.6rem",
+                padding: "0.8rem",
+                border: "1px solid rgba(255,255,255,0.12)",
+                "border-radius": "12px",
+                background: "rgba(255,255,255,0.03)",
+              }}
+            >
+              {Object.entries(defaultApps()).map(([fileType, appName]) => (
+                <label
+                  style={{
+                    display: "grid",
+                    "grid-template-columns": "120px minmax(180px, 1fr)",
+                    "align-items": "center",
+                    gap: "0.65rem",
+                  }}
+                >
+                  <span style={{ color: "#d9ddff", "font-size": "0.84rem" }}>{fileType}</span>
+                  <select
+                    value={appName}
+                    onChange={(e) => updateDefaultApp(fileType, e.currentTarget.value)}
+                    style={{
+                      padding: "0.5rem 0.6rem",
+                      "border-radius": "8px",
+                      border: "1px solid rgba(255,255,255,0.14)",
+                      background: "rgba(255,255,255,0.05)",
+                      color: "#edf0ff",
+                      outline: "none",
+                    }}
+                  >
+                    {appOptions.map((option) => (
+                      <option>{option}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", "justify-content": "space-between", "align-items": "center", gap: "0.7rem" }}>
+              <p style={{ color: "#9ea7cf", "font-size": "0.78rem" }}>
+                These preferences are session-only and will reset on refresh.
+              </p>
+              <button
+                type="button"
+                onClick={resetDefaultApps}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "#edf0ff",
+                  "border-radius": "8px",
+                  padding: "0.45rem 0.7rem",
+                  cursor: "pointer",
+                  "font-size": "0.78rem",
+                }}
+              >
+                Reset Mappings
+              </button>
             </div>
           </>
         )}

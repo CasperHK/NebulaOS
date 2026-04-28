@@ -6,6 +6,7 @@ type FileNode = {
   name: string;
   type: "folder" | "file";
   size?: string;
+  content?: string;
   children?: FileNode[];
 };
 
@@ -19,8 +20,22 @@ const FILE_TREE: FileNode = {
       name: "Documents",
       type: "folder",
       children: [
-        { id: "roadmap", name: "Nebula-Roadmap.md", type: "file", size: "128 KB" },
-        { id: "meeting-notes", name: "Meeting-Notes.txt", type: "file", size: "42 KB" },
+        {
+          id: "roadmap",
+          name: "Nebula-Roadmap.md",
+          type: "file",
+          size: "128 KB",
+          content:
+            "# NebulaOS Roadmap\n\n## Q2 Goals\n- Improve desktop app interactions\n- Add richer file preview support\n- Polish app launch animations\n\n## Notes\nThis document is a sample preview rendered from File Explorer.",
+        },
+        {
+          id: "meeting-notes",
+          name: "Meeting-Notes.txt",
+          type: "file",
+          size: "42 KB",
+          content:
+            "Nebula Team Sync\n\n- Reviewed UI app integration\n- Confirmed File Explorer double-click behavior\n- Action: connect text files to Text Editor preview\n",
+        },
       ],
     },
     {
@@ -78,6 +93,7 @@ type FileExplorerProps = {
   onFocus: () => void;
   zIndex: number;
   onOpenImageViewer?: (fileName: string, fileSize: string) => void;
+  onOpenTextEditor?: (fileName: string, fileContent: string) => void;
 };
 
 export default function FileExplorer(props: FileExplorerProps) {
@@ -88,9 +104,34 @@ export default function FileExplorer(props: FileExplorerProps) {
     return imageExtensions.some((ext) => fileName.toLowerCase().endsWith(ext));
   };
 
+  const isTextFile = (fileName: string): boolean => {
+    const textExtensions = [
+      ".txt",
+      ".md",
+      ".json",
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+      ".css",
+      ".html",
+      ".yaml",
+      ".yml",
+      ".xml",
+    ];
+    return textExtensions.some((ext) => fileName.toLowerCase().endsWith(ext));
+  };
+
   const handleFileDoubleClick = (file: FileNode) => {
     if (isImageFile(file.name) && props.onOpenImageViewer) {
       props.onOpenImageViewer(file.name, file.size ?? "Unknown");
+      return;
+    }
+
+    if (isTextFile(file.name) && props.onOpenTextEditor) {
+      const previewContent =
+        file.content ?? `${file.name}\n\nNo preview content is available for this file yet.`;
+      props.onOpenTextEditor(file.name, previewContent);
     }
   };
 
@@ -247,18 +288,22 @@ export default function FileExplorer(props: FileExplorerProps) {
                     "align-items": "center",
                     "justify-content": "space-between",
                     color: "#ecf6ff",
-                    cursor: isImageFile(file.name) ? "pointer" : "default",
+                    cursor: isImageFile(file.name) || isTextFile(file.name) ? "pointer" : "default",
                     transition: "background 120ms ease",
                   }}
                   onMouseOver={(e) => {
-                    if (isImageFile(file.name)) {
+                    if (isImageFile(file.name) || isTextFile(file.name)) {
                       e.currentTarget.style.background = "rgba(255,255,255,0.08)";
                     }
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.background = "rgba(255,255,255,0.03)";
                   }}
-                  title={isImageFile(file.name) ? `Double-click to open ${file.name}` : file.name}
+                  title={
+                    isImageFile(file.name) || isTextFile(file.name)
+                      ? `Double-click to open ${file.name}`
+                      : file.name
+                  }
                 >
                   <span>📄 {file.name}</span>
                   <span style={{ color: "#8eb8d8", "font-size": "0.78rem" }}>{file.size ?? "-"}</span>
