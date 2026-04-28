@@ -1,0 +1,14 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# SolidStart / Vinxi build outputs
+nebula-ui/.output/
+nebula-ui/.vinxi/
+
+# Go build artifacts
+nebula-kernel/nebula-os-kernel
+
+# Environment
+.env
+.env.local
