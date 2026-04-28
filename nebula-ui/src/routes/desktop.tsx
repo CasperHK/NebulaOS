@@ -58,19 +58,32 @@ export default function Desktop() {
       id: "welcome",
       role: "assistant",
       text:
-        "AI Terminal ready. I can control NebulaOS apps inside this desktop only. Try: open app store, minimize explorer, close control panel, focus ai terminal, show time, help.",
+        "AI assistant ready. AI Terminal is a standalone app, and AI Side Chat is available inside window headers. Try: open ai terminal, minimize explorer, close control panel, show time, help.",
     },
   ]);
 
+  const emitAIState = (messages: AIMessage[] = aiMessages()) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.dispatchEvent(new CustomEvent("nebula:ai-state", { detail: { messages } }));
+  };
+
   const appendAIMessage = (role: AIMessage["role"], text: string) => {
-    setAiMessages((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-        role,
-        text,
-      },
-    ]);
+    setAiMessages((prev) => {
+      const next = [
+        ...prev,
+        {
+          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          role,
+          text,
+        },
+      ];
+
+      emitAIState(next);
+      return next;
+    });
   };
 
   const resolveTargetApp = (raw: string): WindowId | null => {
@@ -90,11 +103,12 @@ export default function Desktop() {
     if (target === "store") return "App Store";
     if (target === "explorer") return "File Explorer";
     if (target === "control-panel") return "Control Panel";
+    if (target === "ai-terminal") return "AI Terminal";
     if (target === "task-manager") return "Task Manager";
     if (target === "text-editor") return "Text Editor";
     if (target === "image-viewer") return "Image Viewer";
     if (target === "mail") return "Mail";
-    return "AI Terminal";
+    return "App";
   };
 
   const openAppWindow = (target: WindowId) => {
@@ -207,7 +221,7 @@ export default function Desktop() {
     ) {
       appendAIMessage(
         "assistant",
-        "Blocked: AI Terminal is sandboxed to NebulaOS app controls only. I cannot execute real OS/system commands.",
+        "Blocked: this AI assistant is sandboxed to NebulaOS app controls only. I cannot execute real OS/system commands.",
       );
       return;
     }
@@ -306,12 +320,30 @@ export default function Desktop() {
     const formatTime = () =>
       new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
+    const handleAICommand = (event: Event) => {
+      const custom = event as CustomEvent<{ input?: string }>;
+
+      if (typeof custom.detail?.input === "string") {
+        runAITerminalCommand(custom.detail.input);
+      }
+    };
+
+    const handleAIStateRequest = () => {
+      emitAIState();
+    };
+
+    window.addEventListener("nebula:ai-command", handleAICommand);
+    window.addEventListener("nebula:ai-state-request", handleAIStateRequest);
+    emitAIState();
+
     setTimeText(formatTime());
     const timer = setInterval(() => setTimeText(formatTime()), 30_000);
     const usageTimer = setInterval(() => setUsagePulse((p) => (p + 1) % 1_000_000), 2500);
     onCleanup(() => {
       clearInterval(timer);
       clearInterval(usageTimer);
+      window.removeEventListener("nebula:ai-command", handleAICommand);
+      window.removeEventListener("nebula:ai-state-request", handleAIStateRequest);
     });
   });
 
@@ -692,7 +724,6 @@ export default function Desktop() {
             onSubmit={runAITerminalCommand}
           />
         )}
-
         {isTaskManagerOpen() && !isTaskManagerMinimized() && (
           <TaskManager
             onClose={() => closeAppWindow("task-manager")}

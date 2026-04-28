@@ -14,12 +14,14 @@ type WindowsProps = {
 	background?: string;
 	zIndex?: number;
 	onFocus?: () => void;
+	showAISideChatButton?: boolean;
 };
 
 export default function Windows(props: WindowsProps) {
 	const ANIMATION_MS = 220;
 	const MIN_WIDTH = 420;
 	const MIN_HEIGHT = 280;
+	const SIDE_AI_WIDTH = 320;
 	const [position, setPosition] = createSignal<{ x: number; y: number } | null>(null);
 	const [size, setSize] = createSignal<{ width: number; height: number } | null>(null);
 	const [isMaximized, setIsMaximized] = createSignal(false);
@@ -28,6 +30,10 @@ export default function Windows(props: WindowsProps) {
 	const [isVisible, setIsVisible] = createSignal(false);
 	const [isClosing, setIsClosing] = createSignal(false);
 	const [isMinimizing, setIsMinimizing] = createSignal(false);
+	const [isSideAIChatOpen, setIsSideAIChatOpen] = createSignal(false);
+	const [aiPrompt, setAiPrompt] = createSignal("");
+	const [aiMessages, setAiMessages] = createSignal<Array<{ id: string; role: "user" | "assistant"; text: string }>>([]);
+	const showAISideChatControls = () => props.showAISideChatButton !== false && props.title !== "Nebula AI Terminal";
 	let sectionRef: HTMLElement | undefined;
 	let closeTimer: number | null = null;
 	let minimizeTimer: number | null = null;
@@ -83,6 +89,23 @@ export default function Windows(props: WindowsProps) {
 	onMount(() => {
 		window.requestAnimationFrame(() => {
 			setIsVisible(true);
+		});
+
+		const handleAIState = (event: Event) => {
+			const custom = event as CustomEvent<{
+				messages?: Array<{ id: string; role: "user" | "assistant"; text: string }>;
+			}>;
+
+			if (Array.isArray(custom.detail?.messages)) {
+				setAiMessages(custom.detail.messages);
+			}
+		};
+
+		window.addEventListener("nebula:ai-state", handleAIState);
+		window.dispatchEvent(new CustomEvent("nebula:ai-state-request"));
+
+		onCleanup(() => {
+			window.removeEventListener("nebula:ai-state", handleAIState);
 		});
 	});
 
@@ -233,6 +256,24 @@ export default function Windows(props: WindowsProps) {
 		setIsMaximized((value) => !value);
 	};
 
+	const handleToggleAIChat = () => {
+		if (!showAISideChatControls()) {
+			return;
+		}
+
+		setIsSideAIChatOpen((value) => !value);
+	};
+
+	const submitAICommand = () => {
+		const text = aiPrompt().trim();
+		if (!text) {
+			return;
+		}
+
+		setAiPrompt("");
+		window.dispatchEvent(new CustomEvent("nebula:ai-command", { detail: { input: text } }));
+	};
+
 	const getWindowTransform = () => {
 		const transforms: string[] = [];
 
@@ -309,6 +350,25 @@ export default function Windows(props: WindowsProps) {
 					<strong style={{ color: "#ececff", "font-size": "0.98rem" }}>{props.title}</strong>
 				</div>
 				<div style={{ display: "flex", "align-items": "center", gap: "0.4rem" }}>
+					{showAISideChatControls() && (
+						<button
+							type="button"
+							onClick={handleToggleAIChat}
+							disabled={isClosing() || isMinimizing()}
+							style={{
+								border: "1px solid rgba(255,255,255,0.2)",
+								background: "rgba(255,255,255,0.06)",
+								color: "#d0d0ff",
+								"border-radius": "8px",
+								padding: "0.32rem 0.55rem",
+								cursor: "pointer",
+							}}
+							aria-label="Toggle AI Side Chat"
+							title="Toggle AI Side Chat"
+						>
+							🤖
+						</button>
+					)}
 					<button
 						type="button"
 						onClick={handleMinimize}
@@ -360,7 +420,131 @@ export default function Windows(props: WindowsProps) {
 				</div>
 			</header>
 
-			{props.children}
+			<div style={{ flex: "1", display: "flex", "min-height": "0" }}>
+				<div style={{ flex: "1", "min-width": "0", overflow: "hidden" }}>{props.children}</div>
+
+				<aside
+					style={{
+						width: showAISideChatControls() && isSideAIChatOpen() ? `${SIDE_AI_WIDTH}px` : "0px",
+						"max-width": "45%",
+						border: "1px solid rgba(255,255,255,0.08)",
+						"border-right": "none",
+						"border-top": "none",
+						"border-bottom": "none",
+						background: "rgba(7,14,30,0.88)",
+						display: "flex",
+						"flex-direction": "column",
+						overflow: "hidden",
+						opacity: showAISideChatControls() && isSideAIChatOpen() ? "1" : "0",
+						transform: showAISideChatControls() && isSideAIChatOpen() ? "translateX(0)" : "translateX(10px)",
+						transition: "width 220ms ease, opacity 180ms ease, transform 220ms ease",
+						"pointer-events": showAISideChatControls() && isSideAIChatOpen() ? "auto" : "none",
+					}}
+					aria-hidden={!(showAISideChatControls() && isSideAIChatOpen())}
+				>
+					<div
+						style={{
+							padding: "0.65rem 0.75rem",
+							border: "1px solid rgba(255,255,255,0.08)",
+							"border-left": "none",
+							"border-right": "none",
+							"border-top": "none",
+							color: "#d8f1ff",
+							"font-size": "0.8rem",
+							"font-weight": "700",
+						}}
+					>
+						AI Side Control
+					</div>
+
+					<div
+						style={{
+							flex: "1",
+							overflow: "auto",
+							padding: "0.65rem 0.75rem",
+							display: "grid",
+							gap: "0.5rem",
+							"align-content": "start",
+						}}
+					>
+						{aiMessages().map((message) => (
+							<div
+								style={{
+									padding: "0.5rem 0.6rem",
+									"border-radius": "8px",
+									border:
+										message.role === "assistant"
+											? "1px solid rgba(98,210,255,0.28)"
+											: "1px solid rgba(255,255,255,0.14)",
+									background:
+										message.role === "assistant"
+											? "rgba(98,210,255,0.1)"
+											: "rgba(255,255,255,0.05)",
+									color: message.role === "assistant" ? "#d8f1ff" : "#e9ebff",
+									"font-size": "0.74rem",
+									"line-height": "1.35",
+								}}
+							>
+								<strong style={{ "font-size": "0.68rem", color: "#95a7d4" }}>
+									{message.role === "assistant" ? "AI" : "You"}
+								</strong>
+								<p style={{ margin: "0.18rem 0 0" }}>{message.text}</p>
+							</div>
+						))}
+					</div>
+
+					<div
+						style={{
+							display: "flex",
+							gap: "0.45rem",
+							padding: "0.65rem 0.75rem",
+							border: "1px solid rgba(255,255,255,0.08)",
+							"border-left": "none",
+							"border-right": "none",
+							"border-bottom": "none",
+						}}
+					>
+						<input
+							type="text"
+							value={aiPrompt()}
+							onInput={(e) => setAiPrompt(e.currentTarget.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									e.preventDefault();
+									submitAICommand();
+								}
+							}}
+							placeholder="open app store"
+							style={{
+								flex: "1",
+								padding: "0.5rem 0.62rem",
+								"border-radius": "8px",
+								border: "1px solid rgba(255,255,255,0.16)",
+								background: "rgba(255,255,255,0.05)",
+								color: "#eff3ff",
+								outline: "none",
+								"font-size": "0.74rem",
+							}}
+						/>
+						<button
+							type="button"
+							onClick={submitAICommand}
+							style={{
+								border: "none",
+								background: "linear-gradient(135deg, #62d2ff, #5f72ff)",
+								color: "#0b1328",
+								"border-radius": "8px",
+								padding: "0.5rem 0.62rem",
+								"font-weight": "700",
+								cursor: "pointer",
+								"font-size": "0.74rem",
+							}}
+						>
+							Send
+						</button>
+					</div>
+				</aside>
+			</div>
 
 			{!isMaximized() && (
 				<>

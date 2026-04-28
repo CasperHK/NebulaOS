@@ -33,6 +33,7 @@ export default function AITerminal(props: AITerminalProps) {
       onClose={props.onClose}
       onMinimize={props.onMinimize}
       onFocus={props.onFocus}
+      showAISideChatButton={false}
       zIndex={props.zIndex}
       top="49%"
       left="54%"
