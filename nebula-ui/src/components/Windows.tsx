@@ -22,11 +22,15 @@ export default function Windows(props: WindowsProps) {
 	const MIN_WIDTH = 420;
 	const MIN_HEIGHT = 280;
 	const SIDE_AI_WIDTH = 320;
+	const MIN_AI_SIDE_WIDTH = 200;
+	const MAX_AI_SIDE_WIDTH = 500;
 	const [position, setPosition] = createSignal<{ x: number; y: number } | null>(null);
 	const [size, setSize] = createSignal<{ width: number; height: number } | null>(null);
+	const [aiSidePanelWidth, setAiSidePanelWidth] = createSignal(SIDE_AI_WIDTH);
 	const [isMaximized, setIsMaximized] = createSignal(false);
 	const [isDragging, setIsDragging] = createSignal(false);
 	const [isResizing, setIsResizing] = createSignal(false);
+	const [isResizingAIPanel, setIsResizingAIPanel] = createSignal(false);
 	const [isVisible, setIsVisible] = createSignal(false);
 	const [isClosing, setIsClosing] = createSignal(false);
 	const [isMinimizing, setIsMinimizing] = createSignal(false);
@@ -42,6 +46,8 @@ export default function Windows(props: WindowsProps) {
 	let dragEndListener: ((event: PointerEvent) => void) | null = null;
 	let resizeMoveListener: ((event: PointerEvent) => void) | null = null;
 	let resizeEndListener: ((event: PointerEvent) => void) | null = null;
+	let aiPanelResizeMoveListener: ((event: PointerEvent) => void) | null = null;
+	let aiPanelResizeEndListener: ((event: PointerEvent) => void) | null = null;
 
 	const clearDragListeners = () => {
 		if (dragMoveListener) {
@@ -73,9 +79,25 @@ export default function Windows(props: WindowsProps) {
 		setIsResizing(false);
 	};
 
+	const clearAIPanelResizeListeners = () => {
+		if (aiPanelResizeMoveListener) {
+			window.removeEventListener("pointermove", aiPanelResizeMoveListener);
+			aiPanelResizeMoveListener = null;
+		}
+
+		if (aiPanelResizeEndListener) {
+			window.removeEventListener("pointerup", aiPanelResizeEndListener);
+			window.removeEventListener("pointercancel", aiPanelResizeEndListener);
+			aiPanelResizeEndListener = null;
+		}
+
+		setIsResizingAIPanel(false);
+	};
+
 	onCleanup(() => {
 		clearDragListeners();
 		clearResizeListeners();
+		clearAIPanelResizeListeners();
 
 		if (closeTimer !== null) {
 			window.clearTimeout(closeTimer);
@@ -274,6 +296,35 @@ export default function Windows(props: WindowsProps) {
 		window.dispatchEvent(new CustomEvent("nebula:ai-command", { detail: { input: text } }));
 	};
 
+	const handleAIPanelResizePointerDown = (event: PointerEvent) => {
+		if (!showAISideChatControls() || !isSideAIChatOpen()) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		const startX = event.clientX;
+		const startWidth = aiSidePanelWidth();
+
+		clearAIPanelResizeListeners();
+		setIsResizingAIPanel(true);
+
+		aiPanelResizeMoveListener = (moveEvent: PointerEvent) => {
+			const deltaX = moveEvent.clientX - startX;
+			const newWidth = Math.max(MIN_AI_SIDE_WIDTH, Math.min(MAX_AI_SIDE_WIDTH, startWidth - deltaX));
+			setAiSidePanelWidth(newWidth);
+		};
+
+		aiPanelResizeEndListener = () => {
+			clearAIPanelResizeListeners();
+		};
+
+		window.addEventListener("pointermove", aiPanelResizeMoveListener);
+		window.addEventListener("pointerup", aiPanelResizeEndListener);
+		window.addEventListener("pointercancel", aiPanelResizeEndListener);
+	};
+
 	const getWindowTransform = () => {
 		const transforms: string[] = [];
 
@@ -423,9 +474,55 @@ export default function Windows(props: WindowsProps) {
 			<div style={{ flex: "1", display: "flex", "min-height": "0" }}>
 				<div style={{ flex: "1", "min-width": "0", overflow: "hidden" }}>{props.children}</div>
 
+				{showAISideChatControls() && isSideAIChatOpen() && (
+					<div
+						onPointerDown={handleAIPanelResizePointerDown}
+						style={{
+							width: "12px",
+							cursor: "ew-resize",
+							background: isResizingAIPanel()
+								? "rgba(98,210,255,0.5)"
+								: "transparent",
+							display: "flex",
+							"align-items": "center",
+							"justify-content": "center",
+							transition: isResizingAIPanel() ? "none" : "background 120ms ease",
+							"user-select": "none",
+							position: "relative",
+						}}
+						title="Drag to resize AI panel"
+					>
+						<div
+							style={{
+								width: "1px",
+								height: "40%",
+								background: isResizingAIPanel()
+									? "rgba(98,210,255,0.6)"
+									: "rgba(98,210,255,0.3)",
+								"border-radius": "1px",
+								transition: isResizingAIPanel() ? "none" : "background 120ms ease, opacity 120ms ease",
+								opacity: isResizingAIPanel() ? 1 : 0.6,
+							}}
+						/>
+						<div
+							style={{
+								width: "1px",
+								height: "40%",
+								background: isResizingAIPanel()
+									? "rgba(98,210,255,0.6)"
+									: "rgba(98,210,255,0.3)",
+								"border-radius": "1px",
+								"margin-left": "4px",
+								transition: isResizingAIPanel() ? "none" : "background 120ms ease, opacity 120ms ease",
+								opacity: isResizingAIPanel() ? 1 : 0.6,
+							}}
+						/>
+					</div>
+				)}
+
 				<aside
 					style={{
-						width: showAISideChatControls() && isSideAIChatOpen() ? `${SIDE_AI_WIDTH}px` : "0px",
+						width: showAISideChatControls() && isSideAIChatOpen() ? `${aiSidePanelWidth()}px` : "0px",
 						"max-width": "45%",
 						border: "1px solid rgba(255,255,255,0.08)",
 						"border-right": "none",
@@ -437,7 +534,9 @@ export default function Windows(props: WindowsProps) {
 						overflow: "hidden",
 						opacity: showAISideChatControls() && isSideAIChatOpen() ? "1" : "0",
 						transform: showAISideChatControls() && isSideAIChatOpen() ? "translateX(0)" : "translateX(10px)",
-						transition: "width 220ms ease, opacity 180ms ease, transform 220ms ease",
+						transition: isResizingAIPanel()
+							? "opacity 180ms ease, transform 220ms ease"
+							: "width 220ms ease, opacity 180ms ease, transform 220ms ease",
 						"pointer-events": showAISideChatControls() && isSideAIChatOpen() ? "auto" : "none",
 					}}
 					aria-hidden={!(showAISideChatControls() && isSideAIChatOpen())}

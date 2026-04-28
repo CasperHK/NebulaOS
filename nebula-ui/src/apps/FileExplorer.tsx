@@ -77,10 +77,22 @@ type FileExplorerProps = {
   onMinimize: () => void;
   onFocus: () => void;
   zIndex: number;
+  onOpenImageViewer?: (fileName: string, fileSize: string) => void;
 };
 
 export default function FileExplorer(props: FileExplorerProps) {
   const [currentFolderId, setCurrentFolderId] = createSignal("root");
+
+  const isImageFile = (fileName: string): boolean => {
+    const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".svg"];
+    return imageExtensions.some((ext) => fileName.toLowerCase().endsWith(ext));
+  };
+
+  const handleFileDoubleClick = (file: FileNode) => {
+    if (isImageFile(file.name) && props.onOpenImageViewer) {
+      props.onOpenImageViewer(file.name, file.size ?? "Unknown");
+    }
+  };
 
   const currentFolder = createMemo(() => {
     const folder = findNode(FILE_TREE, currentFolderId());
@@ -223,7 +235,9 @@ export default function FileExplorer(props: FileExplorerProps) {
 
             <For each={fileItems()}>
               {(file) => (
-                <div
+                <button
+                  type="button"
+                  onDblClick={() => handleFileDoubleClick(file)}
                   style={{
                     border: "1px solid rgba(255,255,255,0.12)",
                     background: "rgba(255,255,255,0.03)",
@@ -233,11 +247,22 @@ export default function FileExplorer(props: FileExplorerProps) {
                     "align-items": "center",
                     "justify-content": "space-between",
                     color: "#ecf6ff",
+                    cursor: isImageFile(file.name) ? "pointer" : "default",
+                    transition: "background 120ms ease",
                   }}
+                  onMouseOver={(e) => {
+                    if (isImageFile(file.name)) {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                  }}
+                  title={isImageFile(file.name) ? `Double-click to open ${file.name}` : file.name}
                 >
                   <span>📄 {file.name}</span>
                   <span style={{ color: "#8eb8d8", "font-size": "0.78rem" }}>{file.size ?? "-"}</span>
-                </div>
+                </button>
               )}
             </For>
 

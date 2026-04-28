@@ -704,6 +704,11 @@ export default function Desktop() {
             onMinimize={() => minimizeAppWindow("explorer")}
             onFocus={() => bringWindowToFront("explorer")}
             zIndex={getWindowZIndex("explorer")}
+            onOpenImageViewer={() => {
+              setIsImageViewerOpen(true);
+              setIsImageViewerMinimized(false);
+              bringWindowToFront("image-viewer");
+            }}
           />
         )}
         {isControlPanelOpen() && !isControlPanelMinimized() && (
