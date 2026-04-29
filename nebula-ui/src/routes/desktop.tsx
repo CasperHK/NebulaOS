@@ -13,6 +13,7 @@ import Wallpapers from "../apps/Wallpapers";
 import Model3DViewer from "../apps/3DModelViewer";
 import Gallery from "../apps/Gallery";
 import Browser from "../apps/Browser";
+import Map from "../apps/Map";
 import AppDock from "../components/AppDock";
 
 export const route = {
@@ -33,7 +34,8 @@ type WindowId =
   | "wallpapers"
   | "model-3d"
   | "gallery"
-  | "browser";
+  | "browser"
+  | "map";
 
 export default function Desktop() {
   const [timeText, setTimeText] = createSignal("--:--");
@@ -69,6 +71,8 @@ export default function Desktop() {
   const [isGalleryMinimized, setIsGalleryMinimized] = createSignal(false);
   const [isBrowserOpen, setIsBrowserOpen] = createSignal(false);
   const [isBrowserMinimized, setIsBrowserMinimized] = createSignal(false);
+  const [isMapOpen, setIsMapOpen] = createSignal(false);
+  const [isMapMinimized, setIsMapMinimized] = createSignal(false);
   const [desktopBackground, setDesktopBackground] = createSignal(
     "linear-gradient(135deg, #0a0a1a 0%, #0d1b3e 60%, #1a0a2e 100%)",
   );
@@ -90,6 +94,7 @@ export default function Desktop() {
     "model-3d",
     "gallery",
     "browser",
+    "map",
   ]);
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
@@ -140,6 +145,7 @@ export default function Desktop() {
     if (["3d", "3d model", "model viewer", "3d viewer"].includes(key)) return "model-3d";
     if (["gallery", "photos", "photo gallery"].includes(key)) return "gallery";
     if (["browser", "web", "internet", "web browser"].includes(key)) return "browser";
+    if (["map", "maps", "navigation", "location"].includes(key)) return "map";
     return null;
   };
 
@@ -158,6 +164,7 @@ export default function Desktop() {
     if (target === "model-3d") return "3D Model Viewer";
     if (target === "gallery") return "Gallery";
     if (target === "browser") return "Browser";
+    if (target === "map") return "Map";
     return "App";
   };
 
@@ -232,6 +239,11 @@ export default function Desktop() {
       setIsBrowserMinimized(false);
     }
 
+    if (target === "map") {
+      setIsMapOpen(true);
+      setIsMapMinimized(false);
+    }
+
     bringWindowToFront(target);
   };
 
@@ -250,6 +262,7 @@ export default function Desktop() {
     if (target === "model-3d") setIsModel3DMinimized(true);
     if (target === "gallery") setIsGalleryMinimized(true);
     if (target === "browser") setIsBrowserMinimized(true);
+    if (target === "map") setIsMapMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -322,6 +335,11 @@ export default function Desktop() {
       setIsBrowserOpen(false);
       setIsBrowserMinimized(false);
     }
+
+    if (target === "map") {
+      setIsMapOpen(false);
+      setIsMapMinimized(false);
+    }
   };
 
   const runAITerminalCommand = (input: string) => {
@@ -345,7 +363,7 @@ export default function Desktop() {
     if (/^help$|^commands$|what can you do|capabilities/.test(lowered)) {
       appendAIMessage(
         "assistant",
-        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer, mail, music player, calculator, wallpapers, 3d model viewer, gallery, browser.",
+        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer, mail, music player, calculator, wallpapers, 3d model viewer, gallery, browser, map.",
       );
       return;
     }
@@ -355,7 +373,7 @@ export default function Desktop() {
       return;
     }
 
-    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos|photo gallery|mail|email|inbox|messages|music player|music|player|audio|calculator|calc|math|compute|wallpapers|wallpaper|background|theme|3d|3d model|model viewer|3d viewer|browser|web|internet|web browser)/);
+    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos|photo gallery|mail|email|inbox|messages|music player|music|player|audio|calculator|calc|math|compute|wallpapers|wallpaper|background|theme|3d|3d model|model viewer|3d viewer|browser|web|internet|web browser|map|maps|navigation|location)/);
 
     if (actionMatch) {
       const action = actionMatch[1];
@@ -393,7 +411,7 @@ export default function Desktop() {
 
     appendAIMessage(
       "assistant",
-      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, open mail, open music player, open calculator, open wallpapers, open 3d model viewer, open gallery, open browser, show time, help.",
+      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, open mail, open music player, open calculator, open wallpapers, open 3d model viewer, open gallery, open browser, open map, show time, help.",
     );
   };
 
@@ -432,6 +450,7 @@ export default function Desktop() {
     if (isModel3DOpen()) rows.push({ appName: "3D Model Viewer", icon: "3D", status: "Running", memoryMb: rand(23, 120, 240), cpuPercent: rand(24, 2, 16) });
     if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "🖼", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
     if (isBrowserOpen()) rows.push({ appName: "Browser", icon: "🌐", status: "Running", memoryMb: rand(27, 70, 150), cpuPercent: rand(28, 1, 10) });
+    if (isMapOpen()) rows.push({ appName: "Map", icon: "🗺", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
     return rows;
   });
 
@@ -1025,6 +1044,41 @@ export default function Desktop() {
             </span>
             <span style={{ "font-size": "0.82rem" }}>Browser</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => openAppWindow("map")}
+            style={{
+              border: "none",
+              background: "transparent",
+              display: "flex",
+              "flex-direction": "column",
+              "align-items": "center",
+              gap: "0.4rem",
+              color: "#d6d6ff",
+              cursor: "pointer",
+              width: "84px",
+              "pointer-events": "auto",
+            }}
+            aria-label="Open Map"
+            title="Map"
+          >
+            <span
+              style={{
+                width: "56px",
+                height: "56px",
+                "border-radius": "14px",
+                background: "linear-gradient(135deg, #16a34a, #0ea5e9)",
+                display: "grid",
+                "place-items": "center",
+                "box-shadow": "0 8px 24px rgba(22,163,74,0.35)",
+                "font-size": "1.45rem",
+              }}
+            >
+              🗺
+            </span>
+            <span style={{ "font-size": "0.82rem" }}>Map</span>
+          </button>
         </div>
 
         <div style={{ margin: "auto", "text-align": "center" }}>
@@ -1200,6 +1254,15 @@ export default function Desktop() {
             onMinimize={() => minimizeAppWindow("browser")}
             onFocus={() => bringWindowToFront("browser")}
             zIndex={getWindowZIndex("browser")}
+          />
+        )}
+
+        {isMapOpen() && !isMapMinimized() && (
+          <Map
+            onClose={() => closeAppWindow("map")}
+            onMinimize={() => minimizeAppWindow("map")}
+            onFocus={() => bringWindowToFront("map")}
+            zIndex={getWindowZIndex("map")}
           />
         )}
       </main>
@@ -1398,6 +1461,18 @@ export default function Desktop() {
               onMinimize: () => setIsBrowserMinimized(true),
               onPin: () => { const next = [...pinnedAppIds(), "browser"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "browser"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "map",
+              title: "Map",
+              icon: "🗺",
+              isOpen: isMapOpen(),
+              isMinimized: isMapMinimized(),
+              isPinned: pinnedAppIds().includes("map"),
+              onRestore: () => openAppWindow("map"),
+              onMinimize: () => setIsMapMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "map"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "map"); setPinnedAppIds(next); savePinnedApps(next); },
             },
           ]}
         />
