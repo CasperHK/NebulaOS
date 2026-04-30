@@ -22,6 +22,7 @@ import Browser from "../apps/Browser";
 import Map from "../apps/Map";
 import Todo from "../apps/Todo";
 import Memo from "../apps/Memo";
+import Chat from "../apps/Chat";
 import AppLauncherIcon from "../components/AppLauncherIcon";
 import AppDock from "../components/AppDock";
 
@@ -52,7 +53,8 @@ type WindowId =
   | "video-player"
   | "pdf-viewer"
   | "todo"
-  | "memo";
+  | "memo"
+  | "chat";
 
 type LauncherIconDef = {
   id: WindowId;
@@ -91,6 +93,7 @@ const LAUNCHER_ICONS: LauncherIconDef[] = [
   { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "📕", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
   { id: "todo", title: "Todo", label: "Todo", icon: "✅", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
   { id: "memo", title: "Memo", label: "Memo", icon: "📒", background: "linear-gradient(135deg, #f59e0b, #fbbf24)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
+  { id: "chat", title: "Chat", label: "Chat", icon: "💬", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", boxShadow: "0 8px 24px rgba(6,182,212,0.35)" },
 ];
 
 export default function Desktop() {
@@ -145,6 +148,8 @@ export default function Desktop() {
   const [isTodoMinimized, setIsTodoMinimized] = createSignal(false);
   const [isMemoOpen, setIsMemoOpen] = createSignal(false);
   const [isMemoMinimized, setIsMemoMinimized] = createSignal(false);
+  const [isChatOpen, setIsChatOpen] = createSignal(false);
+  const [isChatMinimized, setIsChatMinimized] = createSignal(false);
   const [desktopBackground, setDesktopBackground] = createSignal(
     "linear-gradient(135deg, #0a0a1a 0%, #0d1b3e 60%, #1a0a2e 100%)",
   );
@@ -252,117 +257,122 @@ export default function Desktop() {
       setIsStoreOpen(true);
       setIsStoreMinimized(false);
     }
-
+  
     if (target === "explorer") {
       setIsExplorerOpen(true);
       setIsExplorerMinimized(false);
     }
-
+  
     if (target === "control-panel") {
       setIsControlPanelOpen(true);
       setIsControlPanelMinimized(false);
     }
-
+  
     if (target === "ai-terminal") {
       setIsAITerminalOpen(true);
       setIsAITerminalMinimized(false);
     }
-
+  
     if (target === "task-manager") {
       setIsTaskManagerOpen(true);
       setIsTaskManagerMinimized(false);
     }
-
+  
     if (target === "text-editor") {
       setIsTextEditorOpen(true);
       setIsTextEditorMinimized(false);
     }
-
+  
     if (target === "image-viewer") {
       setIsImageViewerOpen(true);
       setIsImageViewerMinimized(false);
     }
-
+  
     if (target === "mail") {
       setIsMailOpen(true);
       setIsMailMinimized(false);
     }
-
+  
     if (target === "music") {
       setIsMusicOpen(true);
       setIsMusicMinimized(false);
     }
-
+  
     if (target === "calculator") {
       setIsCalculatorOpen(true);
       setIsCalculatorMinimized(false);
     }
-
+  
     if (target === "wallpapers") {
       setIsWallpapersOpen(true);
       setIsWallpapersMinimized(false);
     }
-
+  
     if (target === "model-3d") {
       setIsModel3DOpen(true);
       setIsModel3DMinimized(false);
     }
-
+  
     if (target === "gallery") {
       setIsGalleryOpen(true);
       setIsGalleryMinimized(false);
     }
-
+  
     if (target === "browser") {
       setIsBrowserOpen(true);
       setIsBrowserMinimized(false);
     }
-
+  
     if (target === "map") {
       setIsMapOpen(true);
       setIsMapMinimized(false);
     }
-
+  
     if (target === "word") {
       setIsWordOpen(true);
       setIsWordMinimized(false);
     }
-
+  
     if (target === "excel") {
       setIsExcelOpen(true);
       setIsExcelMinimized(false);
     }
-
+  
     if (target === "latex-editor") {
       setIsLaTeXEditorOpen(true);
       setIsLaTeXEditorMinimized(false);
     }
-
+  
     if (target === "terminal") {
       setIsTerminalOpen(true);
       setIsTerminalMinimized(false);
     }
-
+  
     if (target === "video-player") {
       setIsVideoPlayerOpen(true);
       setIsVideoPlayerMinimized(false);
     }
-
+  
     if (target === "pdf-viewer") {
       setIsPDFViewerOpen(true);
       setIsPDFViewerMinimized(false);
     }
-
+  
     if (target === "todo") {
       setIsTodoOpen(true);
       setIsTodoMinimized(false);
     }
-
+  
     if (target === "memo") {
       setIsMemoOpen(true);
       setIsMemoMinimized(false);
     }
-
+  
+    if (target === "chat") {
+      setIsChatOpen(true);
+      setIsChatMinimized(false);
+    }
+  
     bringWindowToFront(target);
   };
 
@@ -390,6 +400,7 @@ export default function Desktop() {
     if (target === "pdf-viewer") setIsPDFViewerMinimized(true);
     if (target === "todo") setIsTodoMinimized(true);
     if (target === "memo") setIsMemoMinimized(true);
+    if (target === "chat") setIsChatMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -397,115 +408,120 @@ export default function Desktop() {
       setIsStoreOpen(false);
       setIsStoreMinimized(false);
     }
-
+  
     if (target === "explorer") {
       setIsExplorerOpen(false);
       setIsExplorerMinimized(false);
     }
-
+  
     if (target === "control-panel") {
       setIsControlPanelOpen(false);
       setIsControlPanelMinimized(false);
     }
-
+  
     if (target === "ai-terminal") {
       setIsAITerminalOpen(false);
       setIsAITerminalMinimized(false);
     }
-
+  
     if (target === "task-manager") {
       setIsTaskManagerOpen(false);
       setIsTaskManagerMinimized(false);
     }
-
+  
     if (target === "text-editor") {
       setIsTextEditorOpen(false);
       setIsTextEditorMinimized(false);
     }
-
+  
     if (target === "image-viewer") {
       setIsImageViewerOpen(false);
       setIsImageViewerMinimized(false);
     }
-
+  
     if (target === "mail") {
       setIsMailOpen(false);
       setIsMailMinimized(false);
     }
-
+  
     if (target === "music") {
       setIsMusicOpen(false);
       setIsMusicMinimized(false);
     }
-
+  
     if (target === "calculator") {
       setIsCalculatorOpen(false);
       setIsCalculatorMinimized(false);
     }
-
+  
     if (target === "wallpapers") {
       setIsWallpapersOpen(false);
       setIsWallpapersMinimized(false);
     }
-
+  
     if (target === "model-3d") {
       setIsModel3DOpen(false);
       setIsModel3DMinimized(false);
     }
-
+  
     if (target === "gallery") {
       setIsGalleryOpen(false);
       setIsGalleryMinimized(false);
     }
-
+  
     if (target === "browser") {
       setIsBrowserOpen(false);
       setIsBrowserMinimized(false);
     }
-
+  
     if (target === "map") {
       setIsMapOpen(false);
       setIsMapMinimized(false);
     }
-
+  
     if (target === "word") {
       setIsWordOpen(false);
       setIsWordMinimized(false);
     }
-
+  
     if (target === "excel") {
       setIsExcelOpen(false);
       setIsExcelMinimized(false);
     }
-
+  
     if (target === "latex-editor") {
       setIsLaTeXEditorOpen(false);
       setIsLaTeXEditorMinimized(false);
     }
-
+  
     if (target === "terminal") {
       setIsTerminalOpen(false);
       setIsTerminalMinimized(false);
     }
-
+  
     if (target === "video-player") {
       setIsVideoPlayerOpen(false);
       setIsVideoPlayerMinimized(false);
     }
-
+  
     if (target === "pdf-viewer") {
       setIsPDFViewerOpen(false);
       setIsPDFViewerMinimized(false);
     }
-
+  
     if (target === "todo") {
       setIsTodoOpen(false);
       setIsTodoMinimized(false);
     }
-
+  
     if (target === "memo") {
       setIsMemoOpen(false);
       setIsMemoMinimized(false);
+    }
+  
+    if (target === "chat") {
+      setIsChatOpen(false);
+      setIsChatMinimized(false);
     }
   };
 
@@ -626,6 +642,7 @@ export default function Desktop() {
     if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "📕", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
     if (isTodoOpen()) rows.push({ appName: "Todo", icon: "✅", status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
     if (isMemoOpen()) rows.push({ appName: "Memo", icon: "📒", status: "Running", memoryMb: rand(45, 16, 38), cpuPercent: rand(46, 0, 2) });
+    if (isChatOpen()) rows.push({ appName: "Chat", icon: "💬", status: "Running", memoryMb: rand(47, 20, 50), cpuPercent: rand(48, 0, 4) });
     return rows;
   });
 
@@ -999,6 +1016,15 @@ export default function Desktop() {
             onMinimize={() => minimizeAppWindow("memo")}
             onFocus={() => bringWindowToFront("memo")}
             zIndex={getWindowZIndex("memo")}
+          />
+        )}
+
+        {isChatOpen() && !isChatMinimized() && (
+          <Chat
+            onClose={() => closeAppWindow("chat")}
+            onMinimize={() => minimizeAppWindow("chat")}
+            onFocus={() => bringWindowToFront("chat")}
+            zIndex={getWindowZIndex("chat")}
           />
         )}
       </main>
