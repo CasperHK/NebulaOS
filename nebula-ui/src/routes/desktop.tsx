@@ -10,6 +10,7 @@ import Excel from "../apps/Excel";
 import LaTeXEditor from "../apps/LaTeXEditor";
 import Terminal from "../apps/Terminal";
 import VideoPlayer from "../apps/VideoPlayer";
+import PDFViewer from "../apps/PDFViewer";
 import ImageViewer from "../apps/ImageViewer";
 import Mail from "../apps/Mail";
 import MusicPlayer from "../apps/MusicPlayer";
@@ -46,7 +47,8 @@ type WindowId =
   | "excel"
   | "latex-editor"
   | "terminal"
-  | "video-player";
+  | "video-player"
+  | "pdf-viewer";
 
 type LauncherIconDef = {
   id: WindowId;
@@ -82,6 +84,7 @@ const LAUNCHER_ICONS: LauncherIconDef[] = [
   { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "∑", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
   { id: "terminal", title: "Terminal", label: "Terminal", icon: ">_", background: "linear-gradient(135deg, #111827, #374151)", boxShadow: "0 8px 24px rgba(55,65,81,0.35)", iconFontSize: "1.05rem", iconColor: "#d1fae5", iconFontWeight: "700", iconFontFamily: "Consolas, monospace" },
   { id: "video-player", title: "Video Player", label: "Video", icon: "🎬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
+  { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "📕", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
 ];
 
 export default function Desktop() {
@@ -130,6 +133,8 @@ export default function Desktop() {
   const [isTerminalMinimized, setIsTerminalMinimized] = createSignal(false);
   const [isVideoPlayerOpen, setIsVideoPlayerOpen] = createSignal(false);
   const [isVideoPlayerMinimized, setIsVideoPlayerMinimized] = createSignal(false);
+  const [isPDFViewerOpen, setIsPDFViewerOpen] = createSignal(false);
+  const [isPDFViewerMinimized, setIsPDFViewerMinimized] = createSignal(false);
   const [desktopBackground, setDesktopBackground] = createSignal(
     "linear-gradient(135deg, #0a0a1a 0%, #0d1b3e 60%, #1a0a2e 100%)",
   );
@@ -154,6 +159,7 @@ export default function Desktop() {
     "map",
     "terminal",
     "video-player",
+    "pdf-viewer",
   ]);
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
@@ -205,6 +211,7 @@ export default function Desktop() {
     if (["gallery", "photos", "photo gallery"].includes(key)) return "gallery";
     if (["browser", "web", "internet", "web browser"].includes(key)) return "browser";
     if (["map", "maps", "navigation", "location"].includes(key)) return "map";
+    if (["pdf", "pdf viewer", "document viewer", "reader"].includes(key)) return "pdf-viewer";
     return null;
   };
 
@@ -224,6 +231,7 @@ export default function Desktop() {
     if (target === "gallery") return "Gallery";
     if (target === "browser") return "Browser";
     if (target === "map") return "Map";
+    if (target === "pdf-viewer") return "PDF Viewer";
     return "App";
   };
 
@@ -328,6 +336,11 @@ export default function Desktop() {
       setIsVideoPlayerMinimized(false);
     }
 
+    if (target === "pdf-viewer") {
+      setIsPDFViewerOpen(true);
+      setIsPDFViewerMinimized(false);
+    }
+
     bringWindowToFront(target);
   };
 
@@ -352,6 +365,7 @@ export default function Desktop() {
     if (target === "latex-editor") setIsLaTeXEditorMinimized(true);
     if (target === "terminal") setIsTerminalMinimized(true);
     if (target === "video-player") setIsVideoPlayerMinimized(true);
+    if (target === "pdf-viewer") setIsPDFViewerMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -453,6 +467,11 @@ export default function Desktop() {
     if (target === "video-player") {
       setIsVideoPlayerOpen(false);
       setIsVideoPlayerMinimized(false);
+    }
+
+    if (target === "pdf-viewer") {
+      setIsPDFViewerOpen(false);
+      setIsPDFViewerMinimized(false);
     }
   };
 
@@ -570,6 +589,7 @@ export default function Desktop() {
     if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "∑", status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
     if (isTerminalOpen()) rows.push({ appName: "Terminal", icon: ">_", status: "Running", memoryMb: rand(37, 26, 64), cpuPercent: rand(38, 0, 4) });
     if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "🎬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
+    if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "📕", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
     return rows;
   });
 
@@ -822,6 +842,15 @@ export default function Desktop() {
             onMinimize={() => minimizeAppWindow("video-player")}
             onFocus={() => bringWindowToFront("video-player")}
             zIndex={getWindowZIndex("video-player")}
+          />
+        )}
+
+        {isPDFViewerOpen() && !isPDFViewerMinimized() && (
+          <PDFViewer
+            onClose={() => closeAppWindow("pdf-viewer")}
+            onMinimize={() => minimizeAppWindow("pdf-viewer")}
+            onFocus={() => bringWindowToFront("pdf-viewer")}
+            zIndex={getWindowZIndex("pdf-viewer")}
           />
         )}
 
@@ -1186,6 +1215,18 @@ export default function Desktop() {
               onMinimize: () => setIsVideoPlayerMinimized(true),
               onPin: () => { const next = [...pinnedAppIds(), "video-player"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "video-player"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "pdf-viewer",
+              title: "PDF Viewer",
+              icon: "📕",
+              isOpen: isPDFViewerOpen(),
+              isMinimized: isPDFViewerMinimized(),
+              isPinned: pinnedAppIds().includes("pdf-viewer"),
+              onRestore: () => openAppWindow("pdf-viewer"),
+              onMinimize: () => setIsPDFViewerMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "pdf-viewer"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "pdf-viewer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
           ]}
         />
