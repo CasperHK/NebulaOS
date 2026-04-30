@@ -20,6 +20,8 @@ import Model3DViewer from "../apps/3DModelViewer";
 import Gallery from "../apps/Gallery";
 import Browser from "../apps/Browser";
 import Map from "../apps/Map";
+import Todo from "../apps/Todo";
+import Memo from "../apps/Memo";
 import AppLauncherIcon from "../components/AppLauncherIcon";
 import AppDock from "../components/AppDock";
 
@@ -48,7 +50,9 @@ type WindowId =
   | "latex-editor"
   | "terminal"
   | "video-player"
-  | "pdf-viewer";
+  | "pdf-viewer"
+  | "todo"
+  | "memo";
 
 type LauncherIconDef = {
   id: WindowId;
@@ -85,6 +89,8 @@ const LAUNCHER_ICONS: LauncherIconDef[] = [
   { id: "terminal", title: "Terminal", label: "Terminal", icon: ">_", background: "linear-gradient(135deg, #111827, #374151)", boxShadow: "0 8px 24px rgba(55,65,81,0.35)", iconFontSize: "1.05rem", iconColor: "#d1fae5", iconFontWeight: "700", iconFontFamily: "Consolas, monospace" },
   { id: "video-player", title: "Video Player", label: "Video", icon: "🎬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
   { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "📕", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
+  { id: "todo", title: "Todo", label: "Todo", icon: "✅", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
+  { id: "memo", title: "Memo", label: "Memo", icon: "📒", background: "linear-gradient(135deg, #f59e0b, #fbbf24)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
 ];
 
 export default function Desktop() {
@@ -135,6 +141,10 @@ export default function Desktop() {
   const [isVideoPlayerMinimized, setIsVideoPlayerMinimized] = createSignal(false);
   const [isPDFViewerOpen, setIsPDFViewerOpen] = createSignal(false);
   const [isPDFViewerMinimized, setIsPDFViewerMinimized] = createSignal(false);
+  const [isTodoOpen, setIsTodoOpen] = createSignal(false);
+  const [isTodoMinimized, setIsTodoMinimized] = createSignal(false);
+  const [isMemoOpen, setIsMemoOpen] = createSignal(false);
+  const [isMemoMinimized, setIsMemoMinimized] = createSignal(false);
   const [desktopBackground, setDesktopBackground] = createSignal(
     "linear-gradient(135deg, #0a0a1a 0%, #0d1b3e 60%, #1a0a2e 100%)",
   );
@@ -160,6 +170,8 @@ export default function Desktop() {
     "terminal",
     "video-player",
     "pdf-viewer",
+    "todo",
+    "memo",
   ]);
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
@@ -341,6 +353,16 @@ export default function Desktop() {
       setIsPDFViewerMinimized(false);
     }
 
+    if (target === "todo") {
+      setIsTodoOpen(true);
+      setIsTodoMinimized(false);
+    }
+
+    if (target === "memo") {
+      setIsMemoOpen(true);
+      setIsMemoMinimized(false);
+    }
+
     bringWindowToFront(target);
   };
 
@@ -366,6 +388,8 @@ export default function Desktop() {
     if (target === "terminal") setIsTerminalMinimized(true);
     if (target === "video-player") setIsVideoPlayerMinimized(true);
     if (target === "pdf-viewer") setIsPDFViewerMinimized(true);
+    if (target === "todo") setIsTodoMinimized(true);
+    if (target === "memo") setIsMemoMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -472,6 +496,16 @@ export default function Desktop() {
     if (target === "pdf-viewer") {
       setIsPDFViewerOpen(false);
       setIsPDFViewerMinimized(false);
+    }
+
+    if (target === "todo") {
+      setIsTodoOpen(false);
+      setIsTodoMinimized(false);
+    }
+
+    if (target === "memo") {
+      setIsMemoOpen(false);
+      setIsMemoMinimized(false);
     }
   };
 
@@ -590,6 +624,8 @@ export default function Desktop() {
     if (isTerminalOpen()) rows.push({ appName: "Terminal", icon: ">_", status: "Running", memoryMb: rand(37, 26, 64), cpuPercent: rand(38, 0, 4) });
     if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "🎬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
     if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "📕", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
+    if (isTodoOpen()) rows.push({ appName: "Todo", icon: "✅", status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
+    if (isMemoOpen()) rows.push({ appName: "Memo", icon: "📒", status: "Running", memoryMb: rand(45, 16, 38), cpuPercent: rand(46, 0, 2) });
     return rows;
   });
 
@@ -947,6 +983,24 @@ export default function Desktop() {
             zIndex={getWindowZIndex("map")}
           />
         )}
+
+        {isTodoOpen() && !isTodoMinimized() && (
+          <Todo
+            onClose={() => closeAppWindow("todo")}
+            onMinimize={() => minimizeAppWindow("todo")}
+            onFocus={() => bringWindowToFront("todo")}
+            zIndex={getWindowZIndex("todo")}
+          />
+        )}
+
+        {isMemoOpen() && !isMemoMinimized() && (
+          <Memo
+            onClose={() => closeAppWindow("memo")}
+            onMinimize={() => minimizeAppWindow("memo")}
+            onFocus={() => bringWindowToFront("memo")}
+            zIndex={getWindowZIndex("memo")}
+          />
+        )}
       </main>
 
       {/* Taskbar */}
@@ -1227,6 +1281,30 @@ export default function Desktop() {
               onMinimize: () => setIsPDFViewerMinimized(true),
               onPin: () => { const next = [...pinnedAppIds(), "pdf-viewer"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "pdf-viewer"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "todo",
+              title: "Todo",
+              icon: "✅",
+              isOpen: isTodoOpen(),
+              isMinimized: isTodoMinimized(),
+              isPinned: pinnedAppIds().includes("todo"),
+              onRestore: () => openAppWindow("todo"),
+              onMinimize: () => setIsTodoMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "todo"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "todo"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "memo",
+              title: "Memo",
+              icon: "📒",
+              isOpen: isMemoOpen(),
+              isMinimized: isMemoMinimized(),
+              isPinned: pinnedAppIds().includes("memo"),
+              onRestore: () => openAppWindow("memo"),
+              onMinimize: () => setIsMemoMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "memo"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "memo"); setPinnedAppIds(next); savePinnedApps(next); },
             },
           ]}
         />
