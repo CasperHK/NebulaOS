@@ -496,7 +496,7 @@ export default function Desktop() {
     if (/^help$|^commands$|what can you do|capabilities/.test(lowered)) {
       appendAIMessage(
         "assistant",
-        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer, mail, music player, calculator, wallpapers, 3d model viewer, gallery, browser, map.",
+        "Commands: open <app>, minimize <app>, close <app>, focus <app>, show time. Apps: app store, explorer, control panel, ai terminal, task manager, text editor, image viewer, mail, music player, calculator, wallpapers, 3d model viewer, gallery, browser, map, pdf viewer.",
       );
       return;
     }
@@ -506,7 +506,7 @@ export default function Desktop() {
       return;
     }
 
-    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos|photo gallery|mail|email|inbox|messages|music player|music|player|audio|calculator|calc|math|compute|wallpapers|wallpaper|background|theme|3d|3d model|model viewer|3d viewer|browser|web|internet|web browser|map|maps|navigation|location)/);
+    const actionMatch = lowered.match(/(open|launch|start|minimize|close|focus|show)\s+(app store|store|market|file explorer|explorer|files|control panel|settings|control|ai terminal|terminal|ai|task manager|tasks|processes|text editor|editor|notes|text|image viewer|viewer|images|gallery|photos|photo gallery|mail|email|inbox|messages|music player|music|player|audio|calculator|calc|math|compute|wallpapers|wallpaper|background|theme|3d|3d model|model viewer|3d viewer|browser|web|internet|web browser|map|maps|navigation|location|pdf|pdf viewer|document viewer|reader)/);
 
     if (actionMatch) {
       const action = actionMatch[1];
@@ -544,7 +544,7 @@ export default function Desktop() {
 
     appendAIMessage(
       "assistant",
-      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, open mail, open music player, open calculator, open wallpapers, open 3d model viewer, open gallery, open browser, open map, show time, help.",
+      "I can only control NebulaOS windows here. Try: open app store, focus explorer, minimize control panel, close ai terminal, open task manager, open text editor, open image viewer, open mail, open music player, open calculator, open wallpapers, open 3d model viewer, open gallery, open browser, open map, open pdf viewer, show time, help.",
     );
   };
 
