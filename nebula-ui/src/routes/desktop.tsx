@@ -5,6 +5,11 @@ import ControlPanel from "../apps/ControlPanel";
 import AITerminal, { type AIMessage } from "../apps/AITerminal";
 import TaskManager, { type AppRuntimeRow } from "../apps/TaskManager";
 import TextEditor from "../apps/TextEditor";
+import Word from "../apps/Word";
+import Excel from "../apps/Excel";
+import LaTeXEditor from "../apps/LaTeXEditor";
+import Terminal from "../apps/Terminal";
+import VideoPlayer from "../apps/VideoPlayer";
 import ImageViewer from "../apps/ImageViewer";
 import Mail from "../apps/Mail";
 import MusicPlayer from "../apps/MusicPlayer";
@@ -14,6 +19,7 @@ import Model3DViewer from "../apps/3DModelViewer";
 import Gallery from "../apps/Gallery";
 import Browser from "../apps/Browser";
 import Map from "../apps/Map";
+import AppLauncherIcon from "../components/AppLauncherIcon";
 import AppDock from "../components/AppDock";
 
 export const route = {
@@ -35,7 +41,48 @@ type WindowId =
   | "model-3d"
   | "gallery"
   | "browser"
-  | "map";
+  | "map"
+  | "word"
+  | "excel"
+  | "latex-editor"
+  | "terminal"
+  | "video-player";
+
+type LauncherIconDef = {
+  id: WindowId;
+  title: string;
+  label: string;
+  icon: string;
+  background: string;
+  boxShadow: string;
+  iconFontSize?: string;
+  iconColor?: string;
+  iconFontWeight?: string;
+  iconFontFamily?: string;
+};
+
+const LAUNCHER_ICONS: LauncherIconDef[] = [
+  { id: "store", title: "App Store", label: "App Store", icon: "🛍", background: "linear-gradient(135deg, #5f72ff, #8f7bff)", boxShadow: "0 8px 24px rgba(95,114,255,0.45)" },
+  { id: "explorer", title: "File Explorer", label: "Explorer", icon: "📁", background: "linear-gradient(135deg, #54a4ff, #38d4b8)", boxShadow: "0 8px 24px rgba(56,212,184,0.35)" },
+  { id: "control-panel", title: "Control Panel", label: "Control Panel", icon: "⚙", background: "linear-gradient(135deg, #ff8b6b, #ffb25b)", boxShadow: "0 8px 24px rgba(255,139,107,0.35)" },
+  { id: "ai-terminal", title: "AI Terminal", label: "AI Terminal", icon: "🤖", background: "linear-gradient(135deg, #62d2ff, #5f72ff)", boxShadow: "0 8px 24px rgba(98,210,255,0.35)" },
+  { id: "task-manager", title: "Task Manager", label: "Task Manager", icon: "📊", background: "linear-gradient(135deg, #34d399, #3b82f6)", boxShadow: "0 8px 24px rgba(52,211,153,0.35)" },
+  { id: "text-editor", title: "Text Editor", label: "Text Editor", icon: "📝", background: "linear-gradient(135deg, #f59e0b, #ef4444)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
+  { id: "image-viewer", title: "Image Viewer", label: "Image Viewer", icon: "🖼", background: "linear-gradient(135deg, #22c55e, #14b8a6)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "mail", title: "Mail", label: "Mail", icon: "📧", background: "linear-gradient(135deg, #6366f1, #06b6d4)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" },
+  { id: "music", title: "Music Player", label: "Music", icon: "🎵", background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 8px 24px rgba(34,211,238,0.35)" },
+  { id: "calculator", title: "Calculator", label: "Calculator", icon: "🧮", background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" },
+  { id: "wallpapers", title: "Wallpapers", label: "Wallpapers", icon: "🌄", background: "linear-gradient(135deg, #0ea5e9, #14b8a6)", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" },
+  { id: "model-3d", title: "3D Model Viewer", label: "3D Viewer", icon: "3D", background: "linear-gradient(135deg, #4338ca, #0ea5e9)", boxShadow: "0 8px 24px rgba(67,56,202,0.35)", iconFontSize: "1rem", iconFontWeight: "800" },
+  { id: "gallery", title: "Gallery", label: "Gallery", icon: "🖼", background: "linear-gradient(135deg, #22c55e, #06b6d4)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "browser", title: "Browser", label: "Browser", icon: "🌐", background: "linear-gradient(135deg, #2563eb, #0ea5e9)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
+  { id: "map", title: "Map", label: "Map", icon: "🗺", background: "linear-gradient(135deg, #16a34a, #0ea5e9)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
+  { id: "word", title: "Word", label: "Word", icon: "📄", background: "linear-gradient(135deg, #2563eb, #60a5fa)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
+  { id: "excel", title: "Excel", label: "Excel", icon: "📊", background: "linear-gradient(135deg, #16a34a, #4ade80)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
+  { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "∑", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
+  { id: "terminal", title: "Terminal", label: "Terminal", icon: ">_", background: "linear-gradient(135deg, #111827, #374151)", boxShadow: "0 8px 24px rgba(55,65,81,0.35)", iconFontSize: "1.05rem", iconColor: "#d1fae5", iconFontWeight: "700", iconFontFamily: "Consolas, monospace" },
+  { id: "video-player", title: "Video Player", label: "Video", icon: "🎬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
+];
 
 export default function Desktop() {
   const [timeText, setTimeText] = createSignal("--:--");
@@ -73,6 +120,16 @@ export default function Desktop() {
   const [isBrowserMinimized, setIsBrowserMinimized] = createSignal(false);
   const [isMapOpen, setIsMapOpen] = createSignal(false);
   const [isMapMinimized, setIsMapMinimized] = createSignal(false);
+  const [isWordOpen, setIsWordOpen] = createSignal(false);
+  const [isWordMinimized, setIsWordMinimized] = createSignal(false);
+  const [isExcelOpen, setIsExcelOpen] = createSignal(false);
+  const [isExcelMinimized, setIsExcelMinimized] = createSignal(false);
+  const [isLaTeXEditorOpen, setIsLaTeXEditorOpen] = createSignal(false);
+  const [isLaTeXEditorMinimized, setIsLaTeXEditorMinimized] = createSignal(false);
+  const [isTerminalOpen, setIsTerminalOpen] = createSignal(false);
+  const [isTerminalMinimized, setIsTerminalMinimized] = createSignal(false);
+  const [isVideoPlayerOpen, setIsVideoPlayerOpen] = createSignal(false);
+  const [isVideoPlayerMinimized, setIsVideoPlayerMinimized] = createSignal(false);
   const [desktopBackground, setDesktopBackground] = createSignal(
     "linear-gradient(135deg, #0a0a1a 0%, #0d1b3e 60%, #1a0a2e 100%)",
   );
@@ -95,6 +152,8 @@ export default function Desktop() {
     "gallery",
     "browser",
     "map",
+    "terminal",
+    "video-player",
   ]);
   const [aiMessages, setAiMessages] = createSignal<AIMessage[]>([
     {
@@ -244,6 +303,31 @@ export default function Desktop() {
       setIsMapMinimized(false);
     }
 
+    if (target === "word") {
+      setIsWordOpen(true);
+      setIsWordMinimized(false);
+    }
+
+    if (target === "excel") {
+      setIsExcelOpen(true);
+      setIsExcelMinimized(false);
+    }
+
+    if (target === "latex-editor") {
+      setIsLaTeXEditorOpen(true);
+      setIsLaTeXEditorMinimized(false);
+    }
+
+    if (target === "terminal") {
+      setIsTerminalOpen(true);
+      setIsTerminalMinimized(false);
+    }
+
+    if (target === "video-player") {
+      setIsVideoPlayerOpen(true);
+      setIsVideoPlayerMinimized(false);
+    }
+
     bringWindowToFront(target);
   };
 
@@ -263,6 +347,11 @@ export default function Desktop() {
     if (target === "gallery") setIsGalleryMinimized(true);
     if (target === "browser") setIsBrowserMinimized(true);
     if (target === "map") setIsMapMinimized(true);
+    if (target === "word") setIsWordMinimized(true);
+    if (target === "excel") setIsExcelMinimized(true);
+    if (target === "latex-editor") setIsLaTeXEditorMinimized(true);
+    if (target === "terminal") setIsTerminalMinimized(true);
+    if (target === "video-player") setIsVideoPlayerMinimized(true);
   };
 
   const closeAppWindow = (target: WindowId) => {
@@ -339,6 +428,31 @@ export default function Desktop() {
     if (target === "map") {
       setIsMapOpen(false);
       setIsMapMinimized(false);
+    }
+
+    if (target === "word") {
+      setIsWordOpen(false);
+      setIsWordMinimized(false);
+    }
+
+    if (target === "excel") {
+      setIsExcelOpen(false);
+      setIsExcelMinimized(false);
+    }
+
+    if (target === "latex-editor") {
+      setIsLaTeXEditorOpen(false);
+      setIsLaTeXEditorMinimized(false);
+    }
+
+    if (target === "terminal") {
+      setIsTerminalOpen(false);
+      setIsTerminalMinimized(false);
+    }
+
+    if (target === "video-player") {
+      setIsVideoPlayerOpen(false);
+      setIsVideoPlayerMinimized(false);
     }
   };
 
@@ -451,6 +565,11 @@ export default function Desktop() {
     if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "🖼", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
     if (isBrowserOpen()) rows.push({ appName: "Browser", icon: "🌐", status: "Running", memoryMb: rand(27, 70, 150), cpuPercent: rand(28, 1, 10) });
     if (isMapOpen()) rows.push({ appName: "Map", icon: "🗺", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
+    if (isWordOpen()) rows.push({ appName: "Word", icon: "📄", status: "Running", memoryMb: rand(31, 38, 88), cpuPercent: rand(32, 0, 5) });
+    if (isExcelOpen()) rows.push({ appName: "Excel", icon: "📊", status: "Running", memoryMb: rand(33, 42, 96), cpuPercent: rand(34, 0, 6) });
+    if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "∑", status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
+    if (isTerminalOpen()) rows.push({ appName: "Terminal", icon: ">_", status: "Running", memoryMb: rand(37, 26, 64), cpuPercent: rand(38, 0, 4) });
+    if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "🎬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
     return rows;
   });
 
@@ -554,531 +673,20 @@ export default function Desktop() {
             "pointer-events": "none",
           }}
         >
-          <button
-            type="button"
-            onClick={() => openAppWindow("store")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open App Store"
-            title="App Store"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #5f72ff, #8f7bff)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(95,114,255,0.45)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🛍
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>App Store</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("explorer")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open File Explorer"
-            title="File Explorer"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #54a4ff, #38d4b8)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(56,212,184,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              📁
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Explorer</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("control-panel")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Control Panel"
-            title="Control Panel"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #ff8b6b, #ffb25b)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(255,139,107,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              ⚙
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Control Panel</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("ai-terminal")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open AI Terminal"
-            title="AI Terminal"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #62d2ff, #5f72ff)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(98,210,255,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🤖
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>AI Terminal</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("task-manager")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Task Manager"
-            title="Task Manager"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #34d399, #3b82f6)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(52,211,153,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              📊
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Task Manager</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("text-editor")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Text Editor"
-            title="Text Editor"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #f59e0b, #ef4444)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(245,158,11,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              📝
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Text Editor</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("image-viewer")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Image Viewer"
-            title="Image Viewer"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #22c55e, #14b8a6)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(34,197,94,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🖼
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Image Viewer</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("mail")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Mail"
-            title="Mail"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #6366f1, #06b6d4)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(99,102,241,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              📧
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Mail</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("music")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Music Player"
-            title="Music Player"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #22d3ee, #0ea5e9)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(34,211,238,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🎵
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Music</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("calculator")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Calculator"
-            title="Calculator"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #f59e0b, #f97316)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(249,115,22,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🧮
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Calculator</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("wallpapers")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Wallpapers"
-            title="Wallpapers"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #0ea5e9, #14b8a6)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(20,184,166,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🌄
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Wallpapers</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("model-3d")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open 3D Model Viewer"
-            title="3D Model Viewer"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #4338ca, #0ea5e9)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(67,56,202,0.35)",
-                "font-size": "1rem",
-                "font-weight": "800",
-              }}
-            >
-              3D
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>3D Viewer</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("gallery")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Gallery"
-            title="Gallery"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #22c55e, #06b6d4)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(34,197,94,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🖼
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Gallery</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("browser")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Browser"
-            title="Browser"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #2563eb, #0ea5e9)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(37,99,235,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🌐
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Browser</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => openAppWindow("map")}
-            style={{
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              "flex-direction": "column",
-              "align-items": "center",
-              gap: "0.4rem",
-              color: "#d6d6ff",
-              cursor: "pointer",
-              width: "84px",
-              "pointer-events": "auto",
-            }}
-            aria-label="Open Map"
-            title="Map"
-          >
-            <span
-              style={{
-                width: "56px",
-                height: "56px",
-                "border-radius": "14px",
-                background: "linear-gradient(135deg, #16a34a, #0ea5e9)",
-                display: "grid",
-                "place-items": "center",
-                "box-shadow": "0 8px 24px rgba(22,163,74,0.35)",
-                "font-size": "1.45rem",
-              }}
-            >
-              🗺
-            </span>
-            <span style={{ "font-size": "0.82rem" }}>Map</span>
-          </button>
+          {LAUNCHER_ICONS.map((app) => (
+            <AppLauncherIcon
+              title={app.title}
+              label={app.label}
+              icon={app.icon}
+              background={app.background}
+              boxShadow={app.boxShadow}
+              iconFontSize={app.iconFontSize}
+              iconColor={app.iconColor}
+              iconFontWeight={app.iconFontWeight}
+              iconFontFamily={app.iconFontFamily}
+              onOpen={() => openAppWindow(app.id)}
+            />
+          ))}
         </div>
 
         <div style={{ margin: "auto", "text-align": "center" }}>
@@ -1169,6 +777,51 @@ export default function Desktop() {
               const target = resolveTargetApp(appName.toLowerCase());
               if (target) closeAppWindow(target);
             }}
+          />
+        )}
+
+        {isWordOpen() && !isWordMinimized() && (
+          <Word
+            onClose={() => closeAppWindow("word")}
+            onMinimize={() => minimizeAppWindow("word")}
+            onFocus={() => bringWindowToFront("word")}
+            zIndex={getWindowZIndex("word")}
+          />
+        )}
+
+        {isExcelOpen() && !isExcelMinimized() && (
+          <Excel
+            onClose={() => closeAppWindow("excel")}
+            onMinimize={() => minimizeAppWindow("excel")}
+            onFocus={() => bringWindowToFront("excel")}
+            zIndex={getWindowZIndex("excel")}
+          />
+        )}
+
+        {isLaTeXEditorOpen() && !isLaTeXEditorMinimized() && (
+          <LaTeXEditor
+            onClose={() => closeAppWindow("latex-editor")}
+            onMinimize={() => minimizeAppWindow("latex-editor")}
+            onFocus={() => bringWindowToFront("latex-editor")}
+            zIndex={getWindowZIndex("latex-editor")}
+          />
+        )}
+
+        {isTerminalOpen() && !isTerminalMinimized() && (
+          <Terminal
+            onClose={() => closeAppWindow("terminal")}
+            onMinimize={() => minimizeAppWindow("terminal")}
+            onFocus={() => bringWindowToFront("terminal")}
+            zIndex={getWindowZIndex("terminal")}
+          />
+        )}
+
+        {isVideoPlayerOpen() && !isVideoPlayerMinimized() && (
+          <VideoPlayer
+            onClose={() => closeAppWindow("video-player")}
+            onMinimize={() => minimizeAppWindow("video-player")}
+            onFocus={() => bringWindowToFront("video-player")}
+            zIndex={getWindowZIndex("video-player")}
           />
         )}
 
@@ -1473,6 +1126,66 @@ export default function Desktop() {
               onMinimize: () => setIsMapMinimized(true),
               onPin: () => { const next = [...pinnedAppIds(), "map"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "map"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "word",
+              title: "Word",
+              icon: "📄",
+              isOpen: isWordOpen(),
+              isMinimized: isWordMinimized(),
+              isPinned: pinnedAppIds().includes("word"),
+              onRestore: () => openAppWindow("word"),
+              onMinimize: () => setIsWordMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "word"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "word"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "excel",
+              title: "Excel",
+              icon: "📊",
+              isOpen: isExcelOpen(),
+              isMinimized: isExcelMinimized(),
+              isPinned: pinnedAppIds().includes("excel"),
+              onRestore: () => openAppWindow("excel"),
+              onMinimize: () => setIsExcelMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "excel"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "excel"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "latex-editor",
+              title: "LaTeX Editor",
+              icon: "∑",
+              isOpen: isLaTeXEditorOpen(),
+              isMinimized: isLaTeXEditorMinimized(),
+              isPinned: pinnedAppIds().includes("latex-editor"),
+              onRestore: () => openAppWindow("latex-editor"),
+              onMinimize: () => setIsLaTeXEditorMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "latex-editor"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "latex-editor"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "terminal",
+              title: "Terminal",
+              icon: ">_",
+              isOpen: isTerminalOpen(),
+              isMinimized: isTerminalMinimized(),
+              isPinned: pinnedAppIds().includes("terminal"),
+              onRestore: () => openAppWindow("terminal"),
+              onMinimize: () => setIsTerminalMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "terminal"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "terminal"); setPinnedAppIds(next); savePinnedApps(next); },
+            },
+            {
+              id: "video-player",
+              title: "Video Player",
+              icon: "🎬",
+              isOpen: isVideoPlayerOpen(),
+              isMinimized: isVideoPlayerMinimized(),
+              isPinned: pinnedAppIds().includes("video-player"),
+              onRestore: () => openAppWindow("video-player"),
+              onMinimize: () => setIsVideoPlayerMinimized(true),
+              onPin: () => { const next = [...pinnedAppIds(), "video-player"]; setPinnedAppIds(next); savePinnedApps(next); },
+              onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "video-player"); setPinnedAppIds(next); savePinnedApps(next); },
             },
           ]}
         />
