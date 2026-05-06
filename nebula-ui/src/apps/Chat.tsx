@@ -1,4 +1,5 @@
 import { For, createSignal } from "solid-js";
+import type { JSX } from "solid-js";
 import Windows from "../components/Windows";
 
 type ChatProps = {
@@ -115,19 +116,13 @@ export default function Chat(props: ChatProps) {
     }
   };
 
-  const messageStyle = (sender: "user" | "bot") => ({
+  const messageStyle = (sender: "user" | "bot"): JSX.CSSProperties => ({
     display: "flex",
     "margin-bottom": "0.75rem",
     "max-width": "80%",
-    ...(sender === "user"
-      ? {
-          "margin-left": "auto",
-          "text-align": "right",
-        }
-      : {
-          "margin-right": "auto",
-          "text-align": "left",
-        }),
+    "margin-left": sender === "user" ? "auto" : "0",
+    "margin-right": sender === "user" ? "0" : "auto",
+    "text-align": sender === "user" ? "right" : "left",
   });
 
   const bubbleStyle = (sender: "user" | "bot") => ({
@@ -151,6 +146,7 @@ export default function Chat(props: ChatProps) {
     <Windows
       title="Chat"
       icon="💬"
+      defaultMaximized={false}
       onClose={props.onClose}
       onMinimize={props.onMinimize}
       onFocus={props.onFocus}
@@ -177,12 +173,6 @@ export default function Chat(props: ChatProps) {
             flex: "1",
             "overflow-y": "auto",
             "padding-right": "0.5rem",
-            "&::-webkit-scrollbar": { width: "6px" },
-            "&::-webkit-scrollbar-track": { background: "rgba(255,255,255,0.05)" },
-            "&::-webkit-scrollbar-thumb": { 
-              background: "rgba(255,255,255,0.2)", 
-              "border-radius": "3px" 
-            },
           }}
         >
           <For each={messages()}>
@@ -195,7 +185,7 @@ export default function Chat(props: ChatProps) {
                     <small style={{ 
                       opacity: 0.7, 
                       "font-size": "0.75rem",
-                      marginTop: "0.25rem",
+                      "margin-top": "0.25rem",
                       display: "inline-block"
                     }}>
                       {message.timestamp}

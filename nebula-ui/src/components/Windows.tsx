@@ -6,6 +6,7 @@ type WindowsProps = {
 	icon?: string;
 	onClose: () => void;
 	onMinimize?: () => void;
+	defaultMaximized?: boolean;
 	children: JSX.Element;
 	width?: string;
 	height?: string;
@@ -27,7 +28,7 @@ export default function Windows(props: WindowsProps) {
 	const [position, setPosition] = createSignal<{ x: number; y: number } | null>(null);
 	const [size, setSize] = createSignal<{ width: number; height: number } | null>(null);
 	const [aiSidePanelWidth, setAiSidePanelWidth] = createSignal(SIDE_AI_WIDTH);
-	const [isMaximized, setIsMaximized] = createSignal(false);
+	const [isMaximized, setIsMaximized] = createSignal(props.defaultMaximized ?? false);
 	const [isDragging, setIsDragging] = createSignal(false);
 	const [isResizing, setIsResizing] = createSignal(false);
 	const [isResizingAIPanel, setIsResizingAIPanel] = createSignal(false);
@@ -249,9 +250,8 @@ export default function Windows(props: WindowsProps) {
 			return;
 		}
 
-		setIsVisible(false);
-
 		if (type === "close") {
+			setIsVisible(false);
 			setIsClosing(true);
 			closeTimer = window.setTimeout(() => {
 				props.onClose();
@@ -259,14 +259,10 @@ export default function Windows(props: WindowsProps) {
 			return;
 		}
 
-		setIsMinimizing(true);
-		minimizeTimer = window.setTimeout(() => {
-			props.onMinimize?.();
-		}, ANIMATION_MS);
+		props.onMinimize?.();
 	};
 
 	const handleMinimize = () => {
-		setIsMaximized(false);
 		startExitAnimation("minimize");
 	};
 

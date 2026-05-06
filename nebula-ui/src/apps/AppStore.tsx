@@ -80,6 +80,7 @@ export default function AppStore(props: AppStoreProps) {
     <Windows
       title="Nebula App Store"
       icon="🛍"
+      defaultMaximized={false}
       onClose={props.onClose}
       onMinimize={props.onMinimize}
       onFocus={props.onFocus}

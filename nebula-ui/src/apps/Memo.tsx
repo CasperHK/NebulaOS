@@ -96,6 +96,7 @@ export default function Memo(props: MemoProps) {
 		<Windows
 			title="Memo"
 			icon="📒"
+			defaultMaximized={false}
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}

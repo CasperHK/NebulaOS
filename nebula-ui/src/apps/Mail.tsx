@@ -128,6 +128,7 @@ export default function Mail(props: MailProps) {
 		<Windows
 			title={`Nebula Mail${unreadCount() > 0 ? ` (${unreadCount()})` : ""}`}
 			icon="📧"
+			defaultMaximized
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}

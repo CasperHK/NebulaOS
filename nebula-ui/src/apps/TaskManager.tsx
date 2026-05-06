@@ -25,6 +25,7 @@ export default function TaskManager(props: TaskManagerProps) {
 		<Windows
 			title="Task Manager"
 			icon="📊"
+			defaultMaximized={false}
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}

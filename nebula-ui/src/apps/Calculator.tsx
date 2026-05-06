@@ -229,6 +229,7 @@ export default function Calculator(props: CalculatorProps) {
 		<Windows
 			title="Calculator"
 			icon="🧮"
+			defaultMaximized={false}
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}

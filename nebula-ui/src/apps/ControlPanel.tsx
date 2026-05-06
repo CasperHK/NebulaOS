@@ -49,6 +49,7 @@ export default function ControlPanel(props: ControlPanelProps) {
     <Windows
       title="Nebula Control Panel"
       icon="⚙"
+      defaultMaximized={false}
       onClose={props.onClose}
       onMinimize={props.onMinimize}
       onFocus={props.onFocus}

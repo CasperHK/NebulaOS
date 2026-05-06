@@ -70,30 +70,30 @@ type LauncherIconDef = {
 };
 
 const LAUNCHER_ICONS: LauncherIconDef[] = [
-  { id: "store", title: "App Store", label: "App Store", icon: "ðŸ›", background: "linear-gradient(135deg, #5f72ff, #8f7bff)", boxShadow: "0 8px 24px rgba(95,114,255,0.45)" },
-  { id: "explorer", title: "File Explorer", label: "Explorer", icon: "ðŸ“", background: "linear-gradient(135deg, #54a4ff, #38d4b8)", boxShadow: "0 8px 24px rgba(56,212,184,0.35)" },
-  { id: "control-panel", title: "Control Panel", label: "Control Panel", icon: "âš™", background: "linear-gradient(135deg, #ff8b6b, #ffb25b)", boxShadow: "0 8px 24px rgba(255,139,107,0.35)" },
-  { id: "ai-terminal", title: "AI Terminal", label: "AI Terminal", icon: "ðŸ¤–", background: "linear-gradient(135deg, #62d2ff, #5f72ff)", boxShadow: "0 8px 24px rgba(98,210,255,0.35)" },
-  { id: "task-manager", title: "Task Manager", label: "Task Manager", icon: "ðŸ“Š", background: "linear-gradient(135deg, #34d399, #3b82f6)", boxShadow: "0 8px 24px rgba(52,211,153,0.35)" },
-  { id: "text-editor", title: "Text Editor", label: "Text Editor", icon: "ðŸ“", background: "linear-gradient(135deg, #f59e0b, #ef4444)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
-  { id: "image-viewer", title: "Image Viewer", label: "Image Viewer", icon: "ðŸ–¼", background: "linear-gradient(135deg, #22c55e, #14b8a6)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
-  { id: "mail", title: "Mail", label: "Mail", icon: "ðŸ“§", background: "linear-gradient(135deg, #6366f1, #06b6d4)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" },
-  { id: "music", title: "Music Player", label: "Music", icon: "ðŸŽµ", background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 8px 24px rgba(34,211,238,0.35)" },
-  { id: "calculator", title: "Calculator", label: "Calculator", icon: "ðŸ§®", background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" },
-  { id: "wallpapers", title: "Wallpapers", label: "Wallpapers", icon: "ðŸŒ„", background: "linear-gradient(135deg, #0ea5e9, #14b8a6)", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" },
+  { id: "store", title: "App Store", label: "App Store", icon: "??", background: "linear-gradient(135deg, #5f72ff, #8f7bff)", boxShadow: "0 8px 24px rgba(95,114,255,0.45)" },
+  { id: "explorer", title: "File Explorer", label: "Explorer", icon: "??", background: "linear-gradient(135deg, #54a4ff, #38d4b8)", boxShadow: "0 8px 24px rgba(56,212,184,0.35)" },
+  { id: "control-panel", title: "Control Panel", label: "Control Panel", icon: "??, background: "linear-gradient(135deg, #ff8b6b, #ffb25b)", boxShadow: "0 8px 24px rgba(255,139,107,0.35)" },
+  { id: "ai-terminal", title: "AI Terminal", label: "AI Terminal", icon: "??", background: "linear-gradient(135deg, #62d2ff, #5f72ff)", boxShadow: "0 8px 24px rgba(98,210,255,0.35)" },
+  { id: "task-manager", title: "Task Manager", label: "Task Manager", icon: "??", background: "linear-gradient(135deg, #34d399, #3b82f6)", boxShadow: "0 8px 24px rgba(52,211,153,0.35)" },
+  { id: "text-editor", title: "Text Editor", label: "Text Editor", icon: "??", background: "linear-gradient(135deg, #f59e0b, #ef4444)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
+  { id: "image-viewer", title: "Image Viewer", label: "Image Viewer", icon: "?–¼", background: "linear-gradient(135deg, #22c55e, #14b8a6)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "mail", title: "Mail", label: "Mail", icon: "?“§", background: "linear-gradient(135deg, #6366f1, #06b6d4)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" },
+  { id: "music", title: "Music Player", label: "Music", icon: "?Žµ", background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 8px 24px rgba(34,211,238,0.35)" },
+  { id: "calculator", title: "Calculator", label: "Calculator", icon: "?§®", background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" },
+  { id: "wallpapers", title: "Wallpapers", label: "Wallpapers", icon: "??", background: "linear-gradient(135deg, #0ea5e9, #14b8a6)", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" },
   { id: "model-3d", title: "3D Model Viewer", label: "3D Viewer", icon: "3D", background: "linear-gradient(135deg, #4338ca, #0ea5e9)", boxShadow: "0 8px 24px rgba(67,56,202,0.35)", iconFontSize: "1rem", iconFontWeight: "800" },
-  { id: "gallery", title: "Gallery", label: "Gallery", icon: "ðŸ–¼", background: "linear-gradient(135deg, #22c55e, #06b6d4)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
-  { id: "browser", title: "Browser", label: "Browser", icon: "ðŸŒ", background: "linear-gradient(135deg, #2563eb, #0ea5e9)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
-  { id: "map", title: "Map", label: "Map", icon: "ðŸ—º", background: "linear-gradient(135deg, #16a34a, #0ea5e9)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
-  { id: "word", title: "Word", label: "Word", icon: "ðŸ“„", background: "linear-gradient(135deg, #2563eb, #60a5fa)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
-  { id: "excel", title: "Excel", label: "Excel", icon: "ðŸ“Š", background: "linear-gradient(135deg, #16a34a, #4ade80)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
-  { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "âˆ‘", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
+  { id: "gallery", title: "Gallery", label: "Gallery", icon: "?–¼", background: "linear-gradient(135deg, #22c55e, #06b6d4)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "browser", title: "Browser", label: "Browser", icon: "??", background: "linear-gradient(135deg, #2563eb, #0ea5e9)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
+  { id: "map", title: "Map", label: "Map", icon: "?—º", background: "linear-gradient(135deg, #16a34a, #0ea5e9)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
+  { id: "word", title: "Word", label: "Word", icon: "??", background: "linear-gradient(135deg, #2563eb, #60a5fa)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
+  { id: "excel", title: "Excel", label: "Excel", icon: "??", background: "linear-gradient(135deg, #16a34a, #4ade80)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
+  { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "??, background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
   { id: "terminal", title: "Terminal", label: "Terminal", icon: ">_", background: "linear-gradient(135deg, #111827, #374151)", boxShadow: "0 8px 24px rgba(55,65,81,0.35)", iconFontSize: "1.05rem", iconColor: "#d1fae5", iconFontWeight: "700", iconFontFamily: "Consolas, monospace" },
-  { id: "video-player", title: "Video Player", label: "Video", icon: "ðŸŽ¬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
-  { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "ðŸ“•", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
-  { id: "todo", title: "Todo", label: "Todo", icon: "âœ…", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
-  { id: "memo", title: "Memo", label: "Memo", icon: "ðŸ“’", background: "linear-gradient(135deg, #f59e0b, #fbbf24)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
-  { id: "chat", title: "Chat", label: "Chat", icon: "ðŸ’¬", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", boxShadow: "0 8px 24px rgba(6,182,212,0.35)" },
+  { id: "video-player", title: "Video Player", label: "Video", icon: "?Ž¬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
+  { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "??", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
+  { id: "todo", title: "Todo", label: "Todo", icon: "??, background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
+  { id: "memo", title: "Memo", label: "Memo", icon: "??", background: "linear-gradient(135deg, #f59e0b, #fbbf24)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
+  { id: "chat", title: "Chat", label: "Chat", icon: "?’¬", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", boxShadow: "0 8px 24px rgba(6,182,212,0.35)" },
 ];
 
 export default function Desktop() {
@@ -377,29 +377,29 @@ export default function Desktop() {
   };
 
   const minimizeAppWindow = (target: WindowId) => {
-    if (target === "store") setIsStoreMinimized(true);
-    if (target === "explorer") setIsExplorerMinimized(true);
-    if (target === "control-panel") setIsControlPanelMinimized(true);
-    if (target === "ai-terminal") setIsAITerminalMinimized(true);
-    if (target === "task-manager") setIsTaskManagerMinimized(true);
-    if (target === "text-editor") setIsTextEditorMinimized(true);
-    if (target === "image-viewer") setIsImageViewerMinimized(true);
-    if (target === "mail") setIsMailMinimized(true);
-    if (target === "music") setIsMusicMinimized(true);
-    if (target === "calculator") setIsCalculatorMinimized(true);
-    if (target === "wallpapers") setIsWallpapersMinimized(true);
-    if (target === "model-3d") setIsModel3DMinimized(true);
-    if (target === "gallery") setIsGalleryMinimized(true);
-    if (target === "browser") setIsBrowserMinimized(true);
-    if (target === "map") setIsMapMinimized(true);
-    if (target === "word") setIsWordMinimized(true);
-    if (target === "excel") setIsExcelMinimized(true);
-    if (target === "latex-editor") setIsLaTeXEditorMinimized(true);
-    if (target === "terminal") setIsTerminalMinimized(true);
-    if (target === "video-player") setIsVideoPlayerMinimized(true);
-    if (target === "pdf-viewer") setIsPDFViewerMinimized(true);
-    if (target === "todo") setIsTodoMinimized(true);
-    if (target === "memo") setIsMemoMinimized(true);
+    if (target === "store") minimizeAppWindow("store");
+    if (target === "explorer") minimizeAppWindow("explorer");
+    if (target === "control-panel") minimizeAppWindow("control-panel");
+    if (target === "ai-terminal") minimizeAppWindow("ai-terminal");
+    if (target === "task-manager") minimizeAppWindow("task-manager");
+    if (target === "text-editor") minimizeAppWindow("text-editor");
+    if (target === "image-viewer") minimizeAppWindow("image-viewer");
+    if (target === "mail") minimizeAppWindow("mail");
+    if (target === "music") minimizeAppWindow("music");
+    if (target === "calculator") minimizeAppWindow("calculator");
+    if (target === "wallpapers") minimizeAppWindow("wallpapers");
+    if (target === "model-3d") minimizeAppWindow("model-3d");
+    if (target === "gallery") minimizeAppWindow("gallery");
+    if (target === "browser") minimizeAppWindow("browser");
+    if (target === "map") minimizeAppWindow("map");
+    if (target === "word") minimizeAppWindow("word");
+    if (target === "excel") minimizeAppWindow("excel");
+    if (target === "latex-editor") minimizeAppWindow("latex-editor");
+    if (target === "terminal") minimizeAppWindow("terminal");
+    if (target === "video-player") minimizeAppWindow("video-player");
+    if (target === "pdf-viewer") minimizeAppWindow("pdf-viewer");
+    if (target === "todo") minimizeAppWindow("todo");
+    if (target === "memo") minimizeAppWindow("memo");
     if (target === "chat") setIsChatMinimized(true);
   };
 
@@ -619,30 +619,30 @@ export default function Desktop() {
       min + Math.floor(((seed + offset * 7919) % (max - min + 1)));
 
     const rows: AppRuntimeRow[] = [];
-    if (isStoreOpen()) rows.push({ appName: "App Store", icon: "ðŸ›", status: "Running", memoryMb: rand(1, 42, 88), cpuPercent: rand(2, 0, 8) });
-    if (isExplorerOpen()) rows.push({ appName: "File Explorer", icon: "ðŸ“", status: "Running", memoryMb: rand(3, 28, 64), cpuPercent: rand(4, 0, 5) });
-    if (isControlPanelOpen()) rows.push({ appName: "Control Panel", icon: "âš™", status: "Running", memoryMb: rand(5, 18, 48), cpuPercent: rand(6, 0, 4) });
-    if (isAITerminalOpen()) rows.push({ appName: "AI Terminal", icon: "ðŸ¤–", status: "Running", memoryMb: rand(7, 56, 120), cpuPercent: rand(8, 1, 12) });
-    if (isTaskManagerOpen()) rows.push({ appName: "Task Manager", icon: "ðŸ“Š", status: "Running", memoryMb: rand(9, 22, 44), cpuPercent: rand(10, 0, 3) });
-    if (isTextEditorOpen()) rows.push({ appName: "Text Editor", icon: "ðŸ“", status: "Running", memoryMb: rand(11, 24, 58), cpuPercent: rand(12, 0, 5) });
-    if (isImageViewerOpen()) rows.push({ appName: "Image Viewer", icon: "ðŸ–¼", status: "Running", memoryMb: rand(13, 62, 130), cpuPercent: rand(14, 1, 9) });
-    if (isMailOpen()) rows.push({ appName: "Mail", icon: "ðŸ“§", status: "Running", memoryMb: rand(15, 45, 98), cpuPercent: rand(16, 0, 6) });
-    if (isMusicOpen()) rows.push({ appName: "Music Player", icon: "ðŸŽµ", status: "Running", memoryMb: rand(17, 50, 110), cpuPercent: rand(18, 0, 7) });
-    if (isCalculatorOpen()) rows.push({ appName: "Calculator", icon: "ðŸ§®", status: "Running", memoryMb: rand(19, 22, 54), cpuPercent: rand(20, 0, 4) });
-    if (isWallpapersOpen()) rows.push({ appName: "Wallpapers", icon: "ðŸ–¼", status: "Running", memoryMb: rand(21, 28, 66), cpuPercent: rand(22, 0, 3) });
+    if (isStoreOpen()) rows.push({ appName: "App Store", icon: "??", status: "Running", memoryMb: rand(1, 42, 88), cpuPercent: rand(2, 0, 8) });
+    if (isExplorerOpen()) rows.push({ appName: "File Explorer", icon: "??", status: "Running", memoryMb: rand(3, 28, 64), cpuPercent: rand(4, 0, 5) });
+    if (isControlPanelOpen()) rows.push({ appName: "Control Panel", icon: "??, status: "Running", memoryMb: rand(5, 18, 48), cpuPercent: rand(6, 0, 4) });
+    if (isAITerminalOpen()) rows.push({ appName: "AI Terminal", icon: "??", status: "Running", memoryMb: rand(7, 56, 120), cpuPercent: rand(8, 1, 12) });
+    if (isTaskManagerOpen()) rows.push({ appName: "Task Manager", icon: "??", status: "Running", memoryMb: rand(9, 22, 44), cpuPercent: rand(10, 0, 3) });
+    if (isTextEditorOpen()) rows.push({ appName: "Text Editor", icon: "??", status: "Running", memoryMb: rand(11, 24, 58), cpuPercent: rand(12, 0, 5) });
+    if (isImageViewerOpen()) rows.push({ appName: "Image Viewer", icon: "?–¼", status: "Running", memoryMb: rand(13, 62, 130), cpuPercent: rand(14, 1, 9) });
+    if (isMailOpen()) rows.push({ appName: "Mail", icon: "?“§", status: "Running", memoryMb: rand(15, 45, 98), cpuPercent: rand(16, 0, 6) });
+    if (isMusicOpen()) rows.push({ appName: "Music Player", icon: "?Žµ", status: "Running", memoryMb: rand(17, 50, 110), cpuPercent: rand(18, 0, 7) });
+    if (isCalculatorOpen()) rows.push({ appName: "Calculator", icon: "?§®", status: "Running", memoryMb: rand(19, 22, 54), cpuPercent: rand(20, 0, 4) });
+    if (isWallpapersOpen()) rows.push({ appName: "Wallpapers", icon: "?–¼", status: "Running", memoryMb: rand(21, 28, 66), cpuPercent: rand(22, 0, 3) });
     if (isModel3DOpen()) rows.push({ appName: "3D Model Viewer", icon: "3D", status: "Running", memoryMb: rand(23, 120, 240), cpuPercent: rand(24, 2, 16) });
-    if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "ðŸ–¼", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
-    if (isBrowserOpen()) rows.push({ appName: "Browser", icon: "ðŸŒ", status: "Running", memoryMb: rand(27, 70, 150), cpuPercent: rand(28, 1, 10) });
-    if (isMapOpen()) rows.push({ appName: "Map", icon: "ðŸ—º", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
-    if (isWordOpen()) rows.push({ appName: "Word", icon: "ðŸ“„", status: "Running", memoryMb: rand(31, 38, 88), cpuPercent: rand(32, 0, 5) });
-    if (isExcelOpen()) rows.push({ appName: "Excel", icon: "ðŸ“Š", status: "Running", memoryMb: rand(33, 42, 96), cpuPercent: rand(34, 0, 6) });
-    if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "âˆ‘", status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
+    if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "?–¼", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
+    if (isBrowserOpen()) rows.push({ appName: "Browser", icon: "??", status: "Running", memoryMb: rand(27, 70, 150), cpuPercent: rand(28, 1, 10) });
+    if (isMapOpen()) rows.push({ appName: "Map", icon: "?—º", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
+    if (isWordOpen()) rows.push({ appName: "Word", icon: "??", status: "Running", memoryMb: rand(31, 38, 88), cpuPercent: rand(32, 0, 5) });
+    if (isExcelOpen()) rows.push({ appName: "Excel", icon: "??", status: "Running", memoryMb: rand(33, 42, 96), cpuPercent: rand(34, 0, 6) });
+    if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "??, status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
     if (isTerminalOpen()) rows.push({ appName: "Terminal", icon: ">_", status: "Running", memoryMb: rand(37, 26, 64), cpuPercent: rand(38, 0, 4) });
-    if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "ðŸŽ¬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
-    if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "ðŸ“•", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
-    if (isTodoOpen()) rows.push({ appName: "Todo", icon: "âœ…", status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
-    if (isMemoOpen()) rows.push({ appName: "Memo", icon: "ðŸ“’", status: "Running", memoryMb: rand(45, 16, 38), cpuPercent: rand(46, 0, 2) });
-    if (isChatOpen()) rows.push({ appName: "Chat", icon: "ðŸ’¬", status: "Running", memoryMb: rand(47, 20, 50), cpuPercent: rand(48, 0, 4) });
+    if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "?Ž¬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
+    if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "??", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
+    if (isTodoOpen()) rows.push({ appName: "Todo", icon: "??, status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
+    if (isMemoOpen()) rows.push({ appName: "Memo", icon: "??", status: "Running", memoryMb: rand(45, 16, 38), cpuPercent: rand(46, 0, 2) });
+    if (isChatOpen()) rows.push({ appName: "Chat", icon: "?’¬", status: "Running", memoryMb: rand(47, 20, 50), cpuPercent: rand(48, 0, 4) });
     return rows;
   });
 
@@ -789,243 +789,291 @@ export default function Desktop() {
           </p>
         </div>
 
-            {isStoreOpen() && !isStoreMinimized() && (
-              <AppStore
-                onClose={() => closeAppWindow("store")}
-                onMinimize={() => minimizeAppWindow("store")}
-                onFocus={() => bringWindowToFront("store")}
-                zIndex={getWindowZIndex("store")}
-                installedAppIds={installedAppIds()}
-                onInstall={installApp}
-              />
+            {isStoreOpen() && (
+              <div style={{ display: isStoreMinimized() ? "none" : "contents" }}>
+                <AppStore
+                  onClose={() => closeAppWindow("store")}
+                  onMinimize={() => minimizeAppWindow("store")}
+                  onFocus={() => bringWindowToFront("store")}
+                  zIndex={getWindowZIndex("store")}
+                  installedAppIds={installedAppIds()}
+                  onInstall={installApp}
+                />
+              </div>
             )}
-        {isExplorerOpen() && !isExplorerMinimized() && (
-          <FileExplorer
-            onClose={() => closeAppWindow("explorer")}
-            onMinimize={() => minimizeAppWindow("explorer")}
-            onFocus={() => bringWindowToFront("explorer")}
-            zIndex={getWindowZIndex("explorer")}
-            onOpenImageViewer={() => {
-              setIsImageViewerOpen(true);
-              setIsImageViewerMinimized(false);
-              bringWindowToFront("image-viewer");
-            }}
-            onOpenTextEditor={(fileName, fileContent) => {
-              setTextEditorTitle(fileName);
-              setTextEditorContent(fileContent);
-              setIsTextEditorOpen(true);
-              setIsTextEditorMinimized(false);
-              bringWindowToFront("text-editor");
-            }}
-          />
+        {isExplorerOpen() && (
+          <div style={{ display: isExplorerMinimized() ? "none" : "contents" }}>
+            <FileExplorer
+              onClose={() => closeAppWindow("explorer")}
+              onMinimize={() => minimizeAppWindow("explorer")}
+              onFocus={() => bringWindowToFront("explorer")}
+              zIndex={getWindowZIndex("explorer")}
+              onOpenImageViewer={() => {
+                setIsImageViewerOpen(true);
+                setIsImageViewerMinimized(false);
+                bringWindowToFront("image-viewer");
+              }}
+              onOpenTextEditor={(fileName, fileContent) => {
+                setTextEditorTitle(fileName);
+                setTextEditorContent(fileContent);
+                setIsTextEditorOpen(true);
+                setIsTextEditorMinimized(false);
+                bringWindowToFront("text-editor");
+              }}
+            />
+          </div>
         )}
-        {isControlPanelOpen() && !isControlPanelMinimized() && (
-          <ControlPanel
-            onClose={() => closeAppWindow("control-panel")}
-            onMinimize={() => minimizeAppWindow("control-panel")}
-            onFocus={() => bringWindowToFront("control-panel")}
-            zIndex={getWindowZIndex("control-panel")}
-          />
+        {isControlPanelOpen() && (
+          <div style={{ display: isControlPanelMinimized() ? "none" : "contents" }}>
+            <ControlPanel
+              onClose={() => closeAppWindow("control-panel")}
+              onMinimize={() => minimizeAppWindow("control-panel")}
+              onFocus={() => bringWindowToFront("control-panel")}
+              zIndex={getWindowZIndex("control-panel")}
+            />
+          </div>
         )}
-        {isAITerminalOpen() && !isAITerminalMinimized() && (
-          <AITerminal
-            onClose={() => closeAppWindow("ai-terminal")}
-            onMinimize={() => minimizeAppWindow("ai-terminal")}
-            onFocus={() => bringWindowToFront("ai-terminal")}
-            zIndex={getWindowZIndex("ai-terminal")}
-            messages={aiMessages()}
-            onSubmit={runAITerminalCommand}
-          />
+        {isAITerminalOpen() && (
+          <div style={{ display: isAITerminalMinimized() ? "none" : "contents" }}>
+            <AITerminal
+              onClose={() => closeAppWindow("ai-terminal")}
+              onMinimize={() => minimizeAppWindow("ai-terminal")}
+              onFocus={() => bringWindowToFront("ai-terminal")}
+              zIndex={getWindowZIndex("ai-terminal")}
+              messages={aiMessages()}
+              onSubmit={runAITerminalCommand}
+            />
+          </div>
         )}
-        {isTaskManagerOpen() && !isTaskManagerMinimized() && (
-          <TaskManager
-            onClose={() => closeAppWindow("task-manager")}
-            onMinimize={() => minimizeAppWindow("task-manager")}
-            onFocus={() => bringWindowToFront("task-manager")}
-            zIndex={getWindowZIndex("task-manager")}
-            runtimeRows={runtimeRows()}
-            totalMemoryMb={totalMemoryMb()}
-            totalCpuPct={totalCpuPct()}
-            onEndApp={(appName) => {
-              const target = resolveTargetApp(appName.toLowerCase());
-              if (target) closeAppWindow(target);
-            }}
-          />
-        )}
-
-        {isWordOpen() && !isWordMinimized() && (
-          <Word
-            onClose={() => closeAppWindow("word")}
-            onMinimize={() => minimizeAppWindow("word")}
-            onFocus={() => bringWindowToFront("word")}
-            zIndex={getWindowZIndex("word")}
-          />
-        )}
-
-        {isExcelOpen() && !isExcelMinimized() && (
-          <Excel
-            onClose={() => closeAppWindow("excel")}
-            onMinimize={() => minimizeAppWindow("excel")}
-            onFocus={() => bringWindowToFront("excel")}
-            zIndex={getWindowZIndex("excel")}
-          />
+        {isTaskManagerOpen() && (
+          <div style={{ display: isTaskManagerMinimized() ? "none" : "contents" }}>
+            <TaskManager
+              onClose={() => closeAppWindow("task-manager")}
+              onMinimize={() => minimizeAppWindow("task-manager")}
+              onFocus={() => bringWindowToFront("task-manager")}
+              zIndex={getWindowZIndex("task-manager")}
+              runtimeRows={runtimeRows()}
+              totalMemoryMb={totalMemoryMb()}
+              totalCpuPct={totalCpuPct()}
+              onEndApp={(appName) => {
+                const target = resolveTargetApp(appName.toLowerCase());
+                if (target) closeAppWindow(target);
+              }}
+            />
+          </div>
         )}
 
-        {isLaTeXEditorOpen() && !isLaTeXEditorMinimized() && (
-          <LaTeXEditor
-            onClose={() => closeAppWindow("latex-editor")}
-            onMinimize={() => minimizeAppWindow("latex-editor")}
-            onFocus={() => bringWindowToFront("latex-editor")}
-            zIndex={getWindowZIndex("latex-editor")}
-          />
+        {isWordOpen() && (
+          <div style={{ display: isWordMinimized() ? "none" : "contents" }}>
+            <Word
+              onClose={() => closeAppWindow("word")}
+              onMinimize={() => minimizeAppWindow("word")}
+              onFocus={() => bringWindowToFront("word")}
+              zIndex={getWindowZIndex("word")}
+            />
+          </div>
         )}
 
-        {isTerminalOpen() && !isTerminalMinimized() && (
-          <Terminal
-            onClose={() => closeAppWindow("terminal")}
-            onMinimize={() => minimizeAppWindow("terminal")}
-            onFocus={() => bringWindowToFront("terminal")}
-            zIndex={getWindowZIndex("terminal")}
-          />
+        {isExcelOpen() && (
+          <div style={{ display: isExcelMinimized() ? "none" : "contents" }}>
+            <Excel
+              onClose={() => closeAppWindow("excel")}
+              onMinimize={() => minimizeAppWindow("excel")}
+              onFocus={() => bringWindowToFront("excel")}
+              zIndex={getWindowZIndex("excel")}
+            />
+          </div>
         )}
 
-        {isVideoPlayerOpen() && !isVideoPlayerMinimized() && (
-          <VideoPlayer
-            onClose={() => closeAppWindow("video-player")}
-            onMinimize={() => minimizeAppWindow("video-player")}
-            onFocus={() => bringWindowToFront("video-player")}
-            zIndex={getWindowZIndex("video-player")}
-          />
+        {isLaTeXEditorOpen() && (
+          <div style={{ display: isLaTeXEditorMinimized() ? "none" : "contents" }}>
+            <LaTeXEditor
+              onClose={() => closeAppWindow("latex-editor")}
+              onMinimize={() => minimizeAppWindow("latex-editor")}
+              onFocus={() => bringWindowToFront("latex-editor")}
+              zIndex={getWindowZIndex("latex-editor")}
+            />
+          </div>
         )}
 
-        {isPDFViewerOpen() && !isPDFViewerMinimized() && (
-          <PDFViewer
-            onClose={() => closeAppWindow("pdf-viewer")}
-            onMinimize={() => minimizeAppWindow("pdf-viewer")}
-            onFocus={() => bringWindowToFront("pdf-viewer")}
-            zIndex={getWindowZIndex("pdf-viewer")}
-          />
+        {isTerminalOpen() && (
+          <div style={{ display: isTerminalMinimized() ? "none" : "contents" }}>
+            <Terminal
+              onClose={() => closeAppWindow("terminal")}
+              onMinimize={() => minimizeAppWindow("terminal")}
+              onFocus={() => bringWindowToFront("terminal")}
+              zIndex={getWindowZIndex("terminal")}
+            />
+          </div>
         )}
 
-        {isTextEditorOpen() && !isTextEditorMinimized() && (
-          <TextEditor
-            onClose={() => closeAppWindow("text-editor")}
-            onMinimize={() => minimizeAppWindow("text-editor")}
-            onFocus={() => bringWindowToFront("text-editor")}
-            zIndex={getWindowZIndex("text-editor")}
-            initialTitle={textEditorTitle()}
-            initialContent={textEditorContent()}
-          />
+        {isVideoPlayerOpen() && (
+          <div style={{ display: isVideoPlayerMinimized() ? "none" : "contents" }}>
+            <VideoPlayer
+              onClose={() => closeAppWindow("video-player")}
+              onMinimize={() => minimizeAppWindow("video-player")}
+              onFocus={() => bringWindowToFront("video-player")}
+              zIndex={getWindowZIndex("video-player")}
+            />
+          </div>
         )}
 
-        {isImageViewerOpen() && !isImageViewerMinimized() && (
-          <ImageViewer
-            onClose={() => closeAppWindow("image-viewer")}
-            onMinimize={() => minimizeAppWindow("image-viewer")}
-            onFocus={() => bringWindowToFront("image-viewer")}
-            zIndex={getWindowZIndex("image-viewer")}
-          />
+        {isPDFViewerOpen() && (
+          <div style={{ display: isPDFViewerMinimized() ? "none" : "contents" }}>
+            <PDFViewer
+              onClose={() => closeAppWindow("pdf-viewer")}
+              onMinimize={() => minimizeAppWindow("pdf-viewer")}
+              onFocus={() => bringWindowToFront("pdf-viewer")}
+              zIndex={getWindowZIndex("pdf-viewer")}
+            />
+          </div>
         )}
 
-        {isMailOpen() && !isMailMinimized() && (
-          <Mail
-            onClose={() => closeAppWindow("mail")}
-            onMinimize={() => minimizeAppWindow("mail")}
-            onFocus={() => bringWindowToFront("mail")}
-            zIndex={getWindowZIndex("mail")}
-          />
+        {isTextEditorOpen() && (
+          <div style={{ display: isTextEditorMinimized() ? "none" : "contents" }}>
+            <TextEditor
+              onClose={() => closeAppWindow("text-editor")}
+              onMinimize={() => minimizeAppWindow("text-editor")}
+              onFocus={() => bringWindowToFront("text-editor")}
+              zIndex={getWindowZIndex("text-editor")}
+              initialTitle={textEditorTitle()}
+              initialContent={textEditorContent()}
+            />
+          </div>
         )}
 
-        {isMusicOpen() && !isMusicMinimized() && (
-          <MusicPlayer
-            onClose={() => closeAppWindow("music")}
-            onMinimize={() => minimizeAppWindow("music")}
-            onFocus={() => bringWindowToFront("music")}
-            zIndex={getWindowZIndex("music")}
-          />
+        {isImageViewerOpen() && (
+          <div style={{ display: isImageViewerMinimized() ? "none" : "contents" }}>
+            <ImageViewer
+              onClose={() => closeAppWindow("image-viewer")}
+              onMinimize={() => minimizeAppWindow("image-viewer")}
+              onFocus={() => bringWindowToFront("image-viewer")}
+              zIndex={getWindowZIndex("image-viewer")}
+            />
+          </div>
         )}
 
-        {isCalculatorOpen() && !isCalculatorMinimized() && (
-          <Calculator
-            onClose={() => closeAppWindow("calculator")}
-            onMinimize={() => minimizeAppWindow("calculator")}
-            onFocus={() => bringWindowToFront("calculator")}
-            zIndex={getWindowZIndex("calculator")}
-          />
+        {isMailOpen() && (
+          <div style={{ display: isMailMinimized() ? "none" : "contents" }}>
+            <Mail
+              onClose={() => closeAppWindow("mail")}
+              onMinimize={() => minimizeAppWindow("mail")}
+              onFocus={() => bringWindowToFront("mail")}
+              zIndex={getWindowZIndex("mail")}
+            />
+          </div>
         )}
 
-        {isWallpapersOpen() && !isWallpapersMinimized() && (
-          <Wallpapers
-            onClose={() => closeAppWindow("wallpapers")}
-            onMinimize={() => minimizeAppWindow("wallpapers")}
-            onFocus={() => bringWindowToFront("wallpapers")}
-            zIndex={getWindowZIndex("wallpapers")}
-            currentBackground={desktopBackground()}
-            onApply={applyDesktopBackground}
-          />
+        {isMusicOpen() && (
+          <div style={{ display: isMusicMinimized() ? "none" : "contents" }}>
+            <MusicPlayer
+              onClose={() => closeAppWindow("music")}
+              onMinimize={() => minimizeAppWindow("music")}
+              onFocus={() => bringWindowToFront("music")}
+              zIndex={getWindowZIndex("music")}
+            />
+          </div>
         )}
 
-        {isModel3DOpen() && !isModel3DMinimized() && (
-          <Model3DViewer
-            onClose={() => closeAppWindow("model-3d")}
-            onMinimize={() => minimizeAppWindow("model-3d")}
-            onFocus={() => bringWindowToFront("model-3d")}
-            zIndex={getWindowZIndex("model-3d")}
-          />
+        {isCalculatorOpen() && (
+          <div style={{ display: isCalculatorMinimized() ? "none" : "contents" }}>
+            <Calculator
+              onClose={() => closeAppWindow("calculator")}
+              onMinimize={() => minimizeAppWindow("calculator")}
+              onFocus={() => bringWindowToFront("calculator")}
+              zIndex={getWindowZIndex("calculator")}
+            />
+          </div>
         )}
 
-        {isGalleryOpen() && !isGalleryMinimized() && (
-          <Gallery
-            onClose={() => closeAppWindow("gallery")}
-            onMinimize={() => minimizeAppWindow("gallery")}
-            onFocus={() => bringWindowToFront("gallery")}
-            zIndex={getWindowZIndex("gallery")}
-          />
+        {isWallpapersOpen() && (
+          <div style={{ display: isWallpapersMinimized() ? "none" : "contents" }}>
+            <Wallpapers
+              onClose={() => closeAppWindow("wallpapers")}
+              onMinimize={() => minimizeAppWindow("wallpapers")}
+              onFocus={() => bringWindowToFront("wallpapers")}
+              zIndex={getWindowZIndex("wallpapers")}
+              currentBackground={desktopBackground()}
+              onApply={applyDesktopBackground}
+            />
+          </div>
         )}
 
-        {isBrowserOpen() && !isBrowserMinimized() && (
-          <Browser
-            onClose={() => closeAppWindow("browser")}
-            onMinimize={() => minimizeAppWindow("browser")}
-            onFocus={() => bringWindowToFront("browser")}
-            zIndex={getWindowZIndex("browser")}
-          />
+        {isModel3DOpen() && (
+          <div style={{ display: isModel3DMinimized() ? "none" : "contents" }}>
+            <Model3DViewer
+              onClose={() => closeAppWindow("model-3d")}
+              onMinimize={() => minimizeAppWindow("model-3d")}
+              onFocus={() => bringWindowToFront("model-3d")}
+              zIndex={getWindowZIndex("model-3d")}
+            />
+          </div>
         )}
 
-        {isMapOpen() && !isMapMinimized() && (
-          <Map
-            onClose={() => closeAppWindow("map")}
-            onMinimize={() => minimizeAppWindow("map")}
-            onFocus={() => bringWindowToFront("map")}
-            zIndex={getWindowZIndex("map")}
-          />
+        {isGalleryOpen() && (
+          <div style={{ display: isGalleryMinimized() ? "none" : "contents" }}>
+            <Gallery
+              onClose={() => closeAppWindow("gallery")}
+              onMinimize={() => minimizeAppWindow("gallery")}
+              onFocus={() => bringWindowToFront("gallery")}
+              zIndex={getWindowZIndex("gallery")}
+            />
+          </div>
         )}
 
-        {isTodoOpen() && !isTodoMinimized() && (
-          <Todo
-            onClose={() => closeAppWindow("todo")}
-            onMinimize={() => minimizeAppWindow("todo")}
-            onFocus={() => bringWindowToFront("todo")}
-            zIndex={getWindowZIndex("todo")}
-          />
+        {isBrowserOpen() && (
+          <div style={{ display: isBrowserMinimized() ? "none" : "contents" }}>
+            <Browser
+              onClose={() => closeAppWindow("browser")}
+              onMinimize={() => minimizeAppWindow("browser")}
+              onFocus={() => bringWindowToFront("browser")}
+              zIndex={getWindowZIndex("browser")}
+            />
+          </div>
         )}
 
-        {isMemoOpen() && !isMemoMinimized() && (
-          <Memo
-            onClose={() => closeAppWindow("memo")}
-            onMinimize={() => minimizeAppWindow("memo")}
-            onFocus={() => bringWindowToFront("memo")}
-            zIndex={getWindowZIndex("memo")}
-          />
+        {isMapOpen() && (
+          <div style={{ display: isMapMinimized() ? "none" : "contents" }}>
+            <Map
+              onClose={() => closeAppWindow("map")}
+              onMinimize={() => minimizeAppWindow("map")}
+              onFocus={() => bringWindowToFront("map")}
+              zIndex={getWindowZIndex("map")}
+            />
+          </div>
         )}
 
-        {isChatOpen() && !isChatMinimized() && (
-          <Chat
-            onClose={() => closeAppWindow("chat")}
-            onMinimize={() => minimizeAppWindow("chat")}
-            onFocus={() => bringWindowToFront("chat")}
-            zIndex={getWindowZIndex("chat")}
-          />
+        {isTodoOpen() && (
+          <div style={{ display: isTodoMinimized() ? "none" : "contents" }}>
+            <Todo
+              onClose={() => closeAppWindow("todo")}
+              onMinimize={() => minimizeAppWindow("todo")}
+              onFocus={() => bringWindowToFront("todo")}
+              zIndex={getWindowZIndex("todo")}
+            />
+          </div>
+        )}
+
+        {isMemoOpen() && (
+          <div style={{ display: isMemoMinimized() ? "none" : "contents" }}>
+            <Memo
+              onClose={() => closeAppWindow("memo")}
+              onMinimize={() => minimizeAppWindow("memo")}
+              onFocus={() => bringWindowToFront("memo")}
+              zIndex={getWindowZIndex("memo")}
+            />
+          </div>
+        )}
+
+        {isChatOpen() && (
+          <div style={{ display: isChatMinimized() ? "none" : "contents" }}>
+            <Chat
+              onClose={() => closeAppWindow("chat")}
+              onMinimize={() => minimizeAppWindow("chat")}
+              onFocus={() => bringWindowToFront("chat")}
+              zIndex={getWindowZIndex("chat")}
+            />
+          </div>
         )}
       </main>
 
@@ -1052,139 +1100,139 @@ export default function Desktop() {
             "background-clip": "text",
           }}
         >
-          NebulaOS{installedAppIds().length > 0 ? ` â€¢ ${installedAppIds().length} apps installed` : ""}
+          NebulaOS{installedAppIds().length > 0 ? ` ??${installedAppIds().length} apps installed` : ""}
         </span>
         <AppDock
           items={[
             {
               id: "store",
               title: "App Store",
-              icon: "ðŸ›",
+              icon: "??",
               isOpen: isStoreOpen(),
               isMinimized: isStoreMinimized(),
               isPinned: pinnedAppIds().includes("store"),
               onRestore: () => openAppWindow("store"),
-              onMinimize: () => setIsStoreMinimized(true),
+              onMinimize: () => minimizeAppWindow("store"),
               onPin: () => { const next = [...pinnedAppIds(), "store"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "store"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "explorer",
               title: "File Explorer",
-              icon: "ðŸ“",
+              icon: "??",
               isOpen: isExplorerOpen(),
               isMinimized: isExplorerMinimized(),
               isPinned: pinnedAppIds().includes("explorer"),
               onRestore: () => openAppWindow("explorer"),
-              onMinimize: () => setIsExplorerMinimized(true),
+              onMinimize: () => minimizeAppWindow("explorer"),
               onPin: () => { const next = [...pinnedAppIds(), "explorer"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "explorer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "control-panel",
               title: "Control Panel",
-              icon: "âš™",
+              icon: "??,
               isOpen: isControlPanelOpen(),
               isMinimized: isControlPanelMinimized(),
               isPinned: pinnedAppIds().includes("control-panel"),
               onRestore: () => openAppWindow("control-panel"),
-              onMinimize: () => setIsControlPanelMinimized(true),
+              onMinimize: () => minimizeAppWindow("control-panel"),
               onPin: () => { const next = [...pinnedAppIds(), "control-panel"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "control-panel"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "ai-terminal",
               title: "AI Terminal",
-              icon: "ðŸ¤–",
+              icon: "??",
               isOpen: isAITerminalOpen(),
               isMinimized: isAITerminalMinimized(),
               isPinned: pinnedAppIds().includes("ai-terminal"),
               onRestore: () => openAppWindow("ai-terminal"),
-              onMinimize: () => setIsAITerminalMinimized(true),
+              onMinimize: () => minimizeAppWindow("ai-terminal"),
               onPin: () => { const next = [...pinnedAppIds(), "ai-terminal"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "ai-terminal"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "task-manager",
               title: "Task Manager",
-              icon: "ðŸ“Š",
+              icon: "??",
               isOpen: isTaskManagerOpen(),
               isMinimized: isTaskManagerMinimized(),
               isPinned: pinnedAppIds().includes("task-manager"),
               onRestore: () => openAppWindow("task-manager"),
-              onMinimize: () => setIsTaskManagerMinimized(true),
+              onMinimize: () => minimizeAppWindow("task-manager"),
               onPin: () => { const next = [...pinnedAppIds(), "task-manager"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "task-manager"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "text-editor",
               title: "Text Editor",
-              icon: "ðŸ“",
+              icon: "??",
               isOpen: isTextEditorOpen(),
               isMinimized: isTextEditorMinimized(),
               isPinned: pinnedAppIds().includes("text-editor"),
               onRestore: () => openAppWindow("text-editor"),
-              onMinimize: () => setIsTextEditorMinimized(true),
+              onMinimize: () => minimizeAppWindow("text-editor"),
               onPin: () => { const next = [...pinnedAppIds(), "text-editor"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "text-editor"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "image-viewer",
               title: "Image Viewer",
-              icon: "ðŸ–¼",
+              icon: "?–¼",
               isOpen: isImageViewerOpen(),
               isMinimized: isImageViewerMinimized(),
               isPinned: pinnedAppIds().includes("image-viewer"),
               onRestore: () => openAppWindow("image-viewer"),
-              onMinimize: () => setIsImageViewerMinimized(true),
+              onMinimize: () => minimizeAppWindow("image-viewer"),
               onPin: () => { const next = [...pinnedAppIds(), "image-viewer"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "image-viewer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "mail",
               title: "Mail",
-              icon: "ðŸ“§",
+              icon: "?“§",
               isOpen: isMailOpen(),
               isMinimized: isMailMinimized(),
               isPinned: pinnedAppIds().includes("mail"),
               onRestore: () => openAppWindow("mail"),
-              onMinimize: () => setIsMailMinimized(true),
+              onMinimize: () => minimizeAppWindow("mail"),
               onPin: () => { const next = [...pinnedAppIds(), "mail"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "mail"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "music",
               title: "Music Player",
-              icon: "ðŸŽµ",
+              icon: "?Žµ",
               isOpen: isMusicOpen(),
               isMinimized: isMusicMinimized(),
               isPinned: pinnedAppIds().includes("music"),
               onRestore: () => openAppWindow("music"),
-              onMinimize: () => setIsMusicMinimized(true),
+              onMinimize: () => minimizeAppWindow("music"),
               onPin: () => { const next = [...pinnedAppIds(), "music"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "music"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "calculator",
               title: "Calculator",
-              icon: "ðŸ§®",
+              icon: "?§®",
               isOpen: isCalculatorOpen(),
               isMinimized: isCalculatorMinimized(),
               isPinned: pinnedAppIds().includes("calculator"),
               onRestore: () => openAppWindow("calculator"),
-              onMinimize: () => setIsCalculatorMinimized(true),
+              onMinimize: () => minimizeAppWindow("calculator"),
               onPin: () => { const next = [...pinnedAppIds(), "calculator"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "calculator"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "wallpapers",
               title: "Wallpapers",
-              icon: "ðŸŒ„",
+              icon: "??",
               isOpen: isWallpapersOpen(),
               isMinimized: isWallpapersMinimized(),
               isPinned: pinnedAppIds().includes("wallpapers"),
               onRestore: () => openAppWindow("wallpapers"),
-              onMinimize: () => setIsWallpapersMinimized(true),
+              onMinimize: () => minimizeAppWindow("wallpapers"),
               onPin: () => { const next = [...pinnedAppIds(), "wallpapers"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "wallpapers"); setPinnedAppIds(next); savePinnedApps(next); },
             },
@@ -1196,79 +1244,79 @@ export default function Desktop() {
               isMinimized: isModel3DMinimized(),
               isPinned: pinnedAppIds().includes("model-3d"),
               onRestore: () => openAppWindow("model-3d"),
-              onMinimize: () => setIsModel3DMinimized(true),
+              onMinimize: () => minimizeAppWindow("model-3d"),
               onPin: () => { const next = [...pinnedAppIds(), "model-3d"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "model-3d"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "gallery",
               title: "Gallery",
-              icon: "ðŸ–¼",
+              icon: "?–¼",
               isOpen: isGalleryOpen(),
               isMinimized: isGalleryMinimized(),
               isPinned: pinnedAppIds().includes("gallery"),
               onRestore: () => openAppWindow("gallery"),
-              onMinimize: () => setIsGalleryMinimized(true),
+              onMinimize: () => minimizeAppWindow("gallery"),
               onPin: () => { const next = [...pinnedAppIds(), "gallery"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "gallery"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "browser",
               title: "Browser",
-              icon: "ðŸŒ",
+              icon: "??",
               isOpen: isBrowserOpen(),
               isMinimized: isBrowserMinimized(),
               isPinned: pinnedAppIds().includes("browser"),
               onRestore: () => openAppWindow("browser"),
-              onMinimize: () => setIsBrowserMinimized(true),
+              onMinimize: () => minimizeAppWindow("browser"),
               onPin: () => { const next = [...pinnedAppIds(), "browser"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "browser"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "map",
               title: "Map",
-              icon: "ðŸ—º",
+              icon: "?—º",
               isOpen: isMapOpen(),
               isMinimized: isMapMinimized(),
               isPinned: pinnedAppIds().includes("map"),
               onRestore: () => openAppWindow("map"),
-              onMinimize: () => setIsMapMinimized(true),
+              onMinimize: () => minimizeAppWindow("map"),
               onPin: () => { const next = [...pinnedAppIds(), "map"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "map"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "word",
               title: "Word",
-              icon: "ðŸ“„",
+              icon: "??",
               isOpen: isWordOpen(),
               isMinimized: isWordMinimized(),
               isPinned: pinnedAppIds().includes("word"),
               onRestore: () => openAppWindow("word"),
-              onMinimize: () => setIsWordMinimized(true),
+              onMinimize: () => minimizeAppWindow("word"),
               onPin: () => { const next = [...pinnedAppIds(), "word"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "word"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "excel",
               title: "Excel",
-              icon: "ðŸ“Š",
+              icon: "??",
               isOpen: isExcelOpen(),
               isMinimized: isExcelMinimized(),
               isPinned: pinnedAppIds().includes("excel"),
               onRestore: () => openAppWindow("excel"),
-              onMinimize: () => setIsExcelMinimized(true),
+              onMinimize: () => minimizeAppWindow("excel"),
               onPin: () => { const next = [...pinnedAppIds(), "excel"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "excel"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "latex-editor",
               title: "LaTeX Editor",
-              icon: "âˆ‘",
+              icon: "??,
               isOpen: isLaTeXEditorOpen(),
               isMinimized: isLaTeXEditorMinimized(),
               isPinned: pinnedAppIds().includes("latex-editor"),
               onRestore: () => openAppWindow("latex-editor"),
-              onMinimize: () => setIsLaTeXEditorMinimized(true),
+              onMinimize: () => minimizeAppWindow("latex-editor"),
               onPin: () => { const next = [...pinnedAppIds(), "latex-editor"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "latex-editor"); setPinnedAppIds(next); savePinnedApps(next); },
             },
@@ -1280,55 +1328,55 @@ export default function Desktop() {
               isMinimized: isTerminalMinimized(),
               isPinned: pinnedAppIds().includes("terminal"),
               onRestore: () => openAppWindow("terminal"),
-              onMinimize: () => setIsTerminalMinimized(true),
+              onMinimize: () => minimizeAppWindow("terminal"),
               onPin: () => { const next = [...pinnedAppIds(), "terminal"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "terminal"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "video-player",
               title: "Video Player",
-              icon: "ðŸŽ¬",
+              icon: "?Ž¬",
               isOpen: isVideoPlayerOpen(),
               isMinimized: isVideoPlayerMinimized(),
               isPinned: pinnedAppIds().includes("video-player"),
               onRestore: () => openAppWindow("video-player"),
-              onMinimize: () => setIsVideoPlayerMinimized(true),
+              onMinimize: () => minimizeAppWindow("video-player"),
               onPin: () => { const next = [...pinnedAppIds(), "video-player"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "video-player"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "pdf-viewer",
               title: "PDF Viewer",
-              icon: "ðŸ“•",
+              icon: "??",
               isOpen: isPDFViewerOpen(),
               isMinimized: isPDFViewerMinimized(),
               isPinned: pinnedAppIds().includes("pdf-viewer"),
               onRestore: () => openAppWindow("pdf-viewer"),
-              onMinimize: () => setIsPDFViewerMinimized(true),
+              onMinimize: () => minimizeAppWindow("pdf-viewer"),
               onPin: () => { const next = [...pinnedAppIds(), "pdf-viewer"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "pdf-viewer"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "todo",
               title: "Todo",
-              icon: "âœ…",
+              icon: "??,
               isOpen: isTodoOpen(),
               isMinimized: isTodoMinimized(),
               isPinned: pinnedAppIds().includes("todo"),
               onRestore: () => openAppWindow("todo"),
-              onMinimize: () => setIsTodoMinimized(true),
+              onMinimize: () => minimizeAppWindow("todo"),
               onPin: () => { const next = [...pinnedAppIds(), "todo"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "todo"); setPinnedAppIds(next); savePinnedApps(next); },
             },
             {
               id: "memo",
               title: "Memo",
-              icon: "ðŸ“’",
+              icon: "??",
               isOpen: isMemoOpen(),
               isMinimized: isMemoMinimized(),
               isPinned: pinnedAppIds().includes("memo"),
               onRestore: () => openAppWindow("memo"),
-              onMinimize: () => setIsMemoMinimized(true),
+              onMinimize: () => minimizeAppWindow("memo"),
               onPin: () => { const next = [...pinnedAppIds(), "memo"]; setPinnedAppIds(next); savePinnedApps(next); },
               onUnpin: () => { const next = pinnedAppIds().filter((id) => id !== "memo"); setPinnedAppIds(next); savePinnedApps(next); },
             },

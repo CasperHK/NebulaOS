@@ -300,6 +300,7 @@ export default function FileExplorer(props: FileExplorerProps) {
     <Windows
       title="Nebula File Explorer"
       icon="📁"
+      defaultMaximized
       onClose={props.onClose}
       onMinimize={props.onMinimize}
       onFocus={props.onFocus}

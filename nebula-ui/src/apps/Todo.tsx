@@ -80,6 +80,7 @@ export default function Todo(props: TodoProps) {
 		<Windows
 			title="Todo"
 			icon="✅"
+			defaultMaximized={false}
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}

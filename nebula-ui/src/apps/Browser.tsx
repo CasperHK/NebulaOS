@@ -114,6 +114,7 @@ export default function Browser(props: BrowserProps) {
 		<Windows
 			title="Nebula Browser"
 			icon="🌐"
+			defaultMaximized
 			onClose={props.onClose}
 			onMinimize={props.onMinimize}
 			onFocus={props.onFocus}
