@@ -1,11 +1,16 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+import { isServer } from "solid-js/web";
 
 export const route = {
   ssr: false,
 };
 
 export default function Login() {
+  if (isServer) {
+    return null;
+  }
+
   const navigate = useNavigate();
   const [username, setUsername] = createSignal("");
   const [password, setPassword] = createSignal("");

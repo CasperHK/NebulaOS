@@ -72,28 +72,28 @@ type LauncherIconDef = {
 const LAUNCHER_ICONS: LauncherIconDef[] = [
   { id: "store", title: "App Store", label: "App Store", icon: "??", background: "linear-gradient(135deg, #5f72ff, #8f7bff)", boxShadow: "0 8px 24px rgba(95,114,255,0.45)" },
   { id: "explorer", title: "File Explorer", label: "Explorer", icon: "??", background: "linear-gradient(135deg, #54a4ff, #38d4b8)", boxShadow: "0 8px 24px rgba(56,212,184,0.35)" },
-  { id: "control-panel", title: "Control Panel", label: "Control Panel", icon: "??, background: "linear-gradient(135deg, #ff8b6b, #ffb25b)", boxShadow: "0 8px 24px rgba(255,139,107,0.35)" },
+  { id: "control-panel", title: "Control Panel", label: "Control Panel", icon: "[CP]", background: "linear-gradient(135deg, #ff8b6b, #ffb25b)", boxShadow: "0 8px 24px rgba(255,139,107,0.35)" },
   { id: "ai-terminal", title: "AI Terminal", label: "AI Terminal", icon: "??", background: "linear-gradient(135deg, #62d2ff, #5f72ff)", boxShadow: "0 8px 24px rgba(98,210,255,0.35)" },
   { id: "task-manager", title: "Task Manager", label: "Task Manager", icon: "??", background: "linear-gradient(135deg, #34d399, #3b82f6)", boxShadow: "0 8px 24px rgba(52,211,153,0.35)" },
   { id: "text-editor", title: "Text Editor", label: "Text Editor", icon: "??", background: "linear-gradient(135deg, #f59e0b, #ef4444)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
-  { id: "image-viewer", title: "Image Viewer", label: "Image Viewer", icon: "?–¼", background: "linear-gradient(135deg, #22c55e, #14b8a6)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
-  { id: "mail", title: "Mail", label: "Mail", icon: "?“§", background: "linear-gradient(135deg, #6366f1, #06b6d4)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" },
-  { id: "music", title: "Music Player", label: "Music", icon: "?Žµ", background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 8px 24px rgba(34,211,238,0.35)" },
-  { id: "calculator", title: "Calculator", label: "Calculator", icon: "?§®", background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" },
+  { id: "image-viewer", title: "Image Viewer", label: "Image Viewer", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #22c55e, #14b8a6)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "mail", title: "Mail", label: "Mail", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #6366f1, #06b6d4)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" },
+  { id: "music", title: "Music Player", label: "Music", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 8px 24px rgba(34,211,238,0.35)" },
+  { id: "calculator", title: "Calculator", label: "Calculator", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #f59e0b, #f97316)", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" },
   { id: "wallpapers", title: "Wallpapers", label: "Wallpapers", icon: "??", background: "linear-gradient(135deg, #0ea5e9, #14b8a6)", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" },
   { id: "model-3d", title: "3D Model Viewer", label: "3D Viewer", icon: "3D", background: "linear-gradient(135deg, #4338ca, #0ea5e9)", boxShadow: "0 8px 24px rgba(67,56,202,0.35)", iconFontSize: "1rem", iconFontWeight: "800" },
-  { id: "gallery", title: "Gallery", label: "Gallery", icon: "?–¼", background: "linear-gradient(135deg, #22c55e, #06b6d4)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
+  { id: "gallery", title: "Gallery", label: "Gallery", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #22c55e, #06b6d4)", boxShadow: "0 8px 24px rgba(34,197,94,0.35)" },
   { id: "browser", title: "Browser", label: "Browser", icon: "??", background: "linear-gradient(135deg, #2563eb, #0ea5e9)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
-  { id: "map", title: "Map", label: "Map", icon: "?—º", background: "linear-gradient(135deg, #16a34a, #0ea5e9)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
+  { id: "map", title: "Map", label: "Map", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #16a34a, #0ea5e9)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
   { id: "word", title: "Word", label: "Word", icon: "??", background: "linear-gradient(135deg, #2563eb, #60a5fa)", boxShadow: "0 8px 24px rgba(37,99,235,0.35)" },
   { id: "excel", title: "Excel", label: "Excel", icon: "??", background: "linear-gradient(135deg, #16a34a, #4ade80)", boxShadow: "0 8px 24px rgba(22,163,74,0.35)" },
-  { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "??, background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
+  { id: "latex-editor", title: "LaTeX Editor", label: "LaTeX", icon: "[TX]", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)", iconColor: "#fff", iconFontWeight: "bold", iconFontFamily: "serif" },
   { id: "terminal", title: "Terminal", label: "Terminal", icon: ">_", background: "linear-gradient(135deg, #111827, #374151)", boxShadow: "0 8px 24px rgba(55,65,81,0.35)", iconFontSize: "1.05rem", iconColor: "#d1fae5", iconFontWeight: "700", iconFontFamily: "Consolas, monospace" },
-  { id: "video-player", title: "Video Player", label: "Video", icon: "?Ž¬", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
+  { id: "video-player", title: "Video Player", label: "Video", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #ef4444, #f59e0b)", boxShadow: "0 8px 24px rgba(239,68,68,0.35)", iconFontSize: "1.2rem" },
   { id: "pdf-viewer", title: "PDF Viewer", label: "PDF", icon: "??", background: "linear-gradient(135deg, #ef4444, #6366f1)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)", iconFontSize: "1.2rem" },
-  { id: "todo", title: "Todo", label: "Todo", icon: "??, background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
+  { id: "todo", title: "Todo", label: "Todo", icon: "[TD]", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", boxShadow: "0 8px 24px rgba(124,58,237,0.35)" },
   { id: "memo", title: "Memo", label: "Memo", icon: "??", background: "linear-gradient(135deg, #f59e0b, #fbbf24)", boxShadow: "0 8px 24px rgba(245,158,11,0.35)" },
-  { id: "chat", title: "Chat", label: "Chat", icon: "?’¬", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", boxShadow: "0 8px 24px rgba(6,182,212,0.35)" },
+  { id: "chat", title: "Chat", label: "Chat", icon: "?ï¿½ï¿½", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", boxShadow: "0 8px 24px rgba(6,182,212,0.35)" },
 ];
 
 export default function Desktop() {
@@ -621,28 +621,28 @@ export default function Desktop() {
     const rows: AppRuntimeRow[] = [];
     if (isStoreOpen()) rows.push({ appName: "App Store", icon: "??", status: "Running", memoryMb: rand(1, 42, 88), cpuPercent: rand(2, 0, 8) });
     if (isExplorerOpen()) rows.push({ appName: "File Explorer", icon: "??", status: "Running", memoryMb: rand(3, 28, 64), cpuPercent: rand(4, 0, 5) });
-    if (isControlPanelOpen()) rows.push({ appName: "Control Panel", icon: "??, status: "Running", memoryMb: rand(5, 18, 48), cpuPercent: rand(6, 0, 4) });
+    if (isControlPanelOpen()) rows.push({ appName: "Control Panel", icon: "[CP]", status: "Running", memoryMb: rand(5, 18, 48), cpuPercent: rand(6, 0, 4) });
     if (isAITerminalOpen()) rows.push({ appName: "AI Terminal", icon: "??", status: "Running", memoryMb: rand(7, 56, 120), cpuPercent: rand(8, 1, 12) });
     if (isTaskManagerOpen()) rows.push({ appName: "Task Manager", icon: "??", status: "Running", memoryMb: rand(9, 22, 44), cpuPercent: rand(10, 0, 3) });
     if (isTextEditorOpen()) rows.push({ appName: "Text Editor", icon: "??", status: "Running", memoryMb: rand(11, 24, 58), cpuPercent: rand(12, 0, 5) });
-    if (isImageViewerOpen()) rows.push({ appName: "Image Viewer", icon: "?–¼", status: "Running", memoryMb: rand(13, 62, 130), cpuPercent: rand(14, 1, 9) });
-    if (isMailOpen()) rows.push({ appName: "Mail", icon: "?“§", status: "Running", memoryMb: rand(15, 45, 98), cpuPercent: rand(16, 0, 6) });
-    if (isMusicOpen()) rows.push({ appName: "Music Player", icon: "?Žµ", status: "Running", memoryMb: rand(17, 50, 110), cpuPercent: rand(18, 0, 7) });
-    if (isCalculatorOpen()) rows.push({ appName: "Calculator", icon: "?§®", status: "Running", memoryMb: rand(19, 22, 54), cpuPercent: rand(20, 0, 4) });
-    if (isWallpapersOpen()) rows.push({ appName: "Wallpapers", icon: "?–¼", status: "Running", memoryMb: rand(21, 28, 66), cpuPercent: rand(22, 0, 3) });
+    if (isImageViewerOpen()) rows.push({ appName: "Image Viewer", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(13, 62, 130), cpuPercent: rand(14, 1, 9) });
+    if (isMailOpen()) rows.push({ appName: "Mail", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(15, 45, 98), cpuPercent: rand(16, 0, 6) });
+    if (isMusicOpen()) rows.push({ appName: "Music Player", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(17, 50, 110), cpuPercent: rand(18, 0, 7) });
+    if (isCalculatorOpen()) rows.push({ appName: "Calculator", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(19, 22, 54), cpuPercent: rand(20, 0, 4) });
+    if (isWallpapersOpen()) rows.push({ appName: "Wallpapers", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(21, 28, 66), cpuPercent: rand(22, 0, 3) });
     if (isModel3DOpen()) rows.push({ appName: "3D Model Viewer", icon: "3D", status: "Running", memoryMb: rand(23, 120, 240), cpuPercent: rand(24, 2, 16) });
-    if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "?–¼", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
+    if (isGalleryOpen()) rows.push({ appName: "Gallery", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(25, 48, 104), cpuPercent: rand(26, 0, 6) });
     if (isBrowserOpen()) rows.push({ appName: "Browser", icon: "??", status: "Running", memoryMb: rand(27, 70, 150), cpuPercent: rand(28, 1, 10) });
-    if (isMapOpen()) rows.push({ appName: "Map", icon: "?—º", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
+    if (isMapOpen()) rows.push({ appName: "Map", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(29, 58, 128), cpuPercent: rand(30, 0, 7) });
     if (isWordOpen()) rows.push({ appName: "Word", icon: "??", status: "Running", memoryMb: rand(31, 38, 88), cpuPercent: rand(32, 0, 5) });
     if (isExcelOpen()) rows.push({ appName: "Excel", icon: "??", status: "Running", memoryMb: rand(33, 42, 96), cpuPercent: rand(34, 0, 6) });
-    if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "??, status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
+    if (isLaTeXEditorOpen()) rows.push({ appName: "LaTeX Editor", icon: "[TX]", status: "Running", memoryMb: rand(35, 30, 72), cpuPercent: rand(36, 0, 4) });
     if (isTerminalOpen()) rows.push({ appName: "Terminal", icon: ">_", status: "Running", memoryMb: rand(37, 26, 64), cpuPercent: rand(38, 0, 4) });
-    if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "?Ž¬", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
+    if (isVideoPlayerOpen()) rows.push({ appName: "Video Player", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(39, 68, 180), cpuPercent: rand(40, 1, 12) });
     if (isPDFViewerOpen()) rows.push({ appName: "PDF Viewer", icon: "??", status: "Running", memoryMb: rand(41, 36, 96), cpuPercent: rand(42, 0, 6) });
-    if (isTodoOpen()) rows.push({ appName: "Todo", icon: "??, status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
+    if (isTodoOpen()) rows.push({ appName: "Todo", icon: "[TD]", status: "Running", memoryMb: rand(43, 18, 42), cpuPercent: rand(44, 0, 3) });
     if (isMemoOpen()) rows.push({ appName: "Memo", icon: "??", status: "Running", memoryMb: rand(45, 16, 38), cpuPercent: rand(46, 0, 2) });
-    if (isChatOpen()) rows.push({ appName: "Chat", icon: "?’¬", status: "Running", memoryMb: rand(47, 20, 50), cpuPercent: rand(48, 0, 4) });
+    if (isChatOpen()) rows.push({ appName: "Chat", icon: "?ï¿½ï¿½", status: "Running", memoryMb: rand(47, 20, 50), cpuPercent: rand(48, 0, 4) });
     return rows;
   });
 
@@ -1131,7 +1131,7 @@ export default function Desktop() {
             {
               id: "control-panel",
               title: "Control Panel",
-              icon: "??,
+              icon: "[CP]",
               isOpen: isControlPanelOpen(),
               isMinimized: isControlPanelMinimized(),
               isPinned: pinnedAppIds().includes("control-panel"),
@@ -1179,7 +1179,7 @@ export default function Desktop() {
             {
               id: "image-viewer",
               title: "Image Viewer",
-              icon: "?–¼",
+              icon: "?ï¿½ï¿½",
               isOpen: isImageViewerOpen(),
               isMinimized: isImageViewerMinimized(),
               isPinned: pinnedAppIds().includes("image-viewer"),
@@ -1191,7 +1191,7 @@ export default function Desktop() {
             {
               id: "mail",
               title: "Mail",
-              icon: "?“§",
+              icon: "?ï¿½ï¿½",
               isOpen: isMailOpen(),
               isMinimized: isMailMinimized(),
               isPinned: pinnedAppIds().includes("mail"),
@@ -1203,7 +1203,7 @@ export default function Desktop() {
             {
               id: "music",
               title: "Music Player",
-              icon: "?Žµ",
+              icon: "?ï¿½ï¿½",
               isOpen: isMusicOpen(),
               isMinimized: isMusicMinimized(),
               isPinned: pinnedAppIds().includes("music"),
@@ -1215,7 +1215,7 @@ export default function Desktop() {
             {
               id: "calculator",
               title: "Calculator",
-              icon: "?§®",
+              icon: "?ï¿½ï¿½",
               isOpen: isCalculatorOpen(),
               isMinimized: isCalculatorMinimized(),
               isPinned: pinnedAppIds().includes("calculator"),
@@ -1251,7 +1251,7 @@ export default function Desktop() {
             {
               id: "gallery",
               title: "Gallery",
-              icon: "?–¼",
+              icon: "?ï¿½ï¿½",
               isOpen: isGalleryOpen(),
               isMinimized: isGalleryMinimized(),
               isPinned: pinnedAppIds().includes("gallery"),
@@ -1275,7 +1275,7 @@ export default function Desktop() {
             {
               id: "map",
               title: "Map",
-              icon: "?—º",
+              icon: "?ï¿½ï¿½",
               isOpen: isMapOpen(),
               isMinimized: isMapMinimized(),
               isPinned: pinnedAppIds().includes("map"),
@@ -1311,7 +1311,7 @@ export default function Desktop() {
             {
               id: "latex-editor",
               title: "LaTeX Editor",
-              icon: "??,
+              icon: "[TX]",
               isOpen: isLaTeXEditorOpen(),
               isMinimized: isLaTeXEditorMinimized(),
               isPinned: pinnedAppIds().includes("latex-editor"),
@@ -1335,7 +1335,7 @@ export default function Desktop() {
             {
               id: "video-player",
               title: "Video Player",
-              icon: "?Ž¬",
+              icon: "?ï¿½ï¿½",
               isOpen: isVideoPlayerOpen(),
               isMinimized: isVideoPlayerMinimized(),
               isPinned: pinnedAppIds().includes("video-player"),
@@ -1359,7 +1359,7 @@ export default function Desktop() {
             {
               id: "todo",
               title: "Todo",
-              icon: "??,
+              icon: "[TD]",
               isOpen: isTodoOpen(),
               isMinimized: isTodoMinimized(),
               isPinned: pinnedAppIds().includes("todo"),
